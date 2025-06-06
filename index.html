@@ -2,98 +2,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REDLININ' GARAGE</title>
-
-  <!-- FONT -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet" />
-
-  <!-- THREE.JS + GLTFLoader -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.156.1/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.156.1/examples/js/loaders/GLTFLoader.js"></script>
-
-  <!-- STYLES -->
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      height: 100%;
-      font-family: 'Orbitron', sans-serif;
-    }
-
-    body {
-      background: url('garage_bg.png') no-repeat center center fixed;
-      background-size: cover;
-    }
-
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-    }
-
-    .menu {
-      position: absolute;
-      top: 40px;
-      right: 40px;
-      z-index: 10;
-      background: rgba(0, 0, 0, 0.65);
-      border: 2px solid #ff00ff;
-      padding: 20px;
-      border-radius: 12px;
-      color: cyan;
-      text-shadow: 1px 1px #000;
-    }
-
-    .menu div {
-      margin: 10px 0;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    .menu div:hover {
-      color: #00ffff;
-    }
-
-    .jukebox {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      z-index: 10;
-      width: 240px;
-      height: 120px;
-      border: 2px solid #00faff;
-      border-radius: 8px;
-      overflow: hidden;
-      background: rgba(0, 0, 0, 0.75);
-    }
-
-    .jukebox iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>REDLININ' GARAGE</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Draco', sans-serif;
+            background-color: black;
+        }
+        #bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+        #menu {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid magenta;
+            border-radius: 12px;
+            padding: 20px;
+            color: cyan;
+            z-index: 2;
+        }
+        .menu-item {
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        .disabled {
+            opacity: 0.5;
+        }
+        #jukebox {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 5;
+            border: 3px solid #00ffff;
+            border-radius: 8px;
+            overflow: hidden;
+            width: 220px;
+            height: 120px;
+            background-color: #111;
+        }
+    </style>
 </head>
-
 <body>
-  <div class="menu">
-    <div>ADVENTURE</div>
-    <div>EXHIBITION</div>
-    <div style="opacity: 0.4;">CUSTOMIZE</div>
-    <div>OPTIONS</div>
-    <div>PROFILE</div>
-    <div>SECRETS SHOP</div>
-  </div>
-
-  <div class="jukebox">
-    <iframe scrolling="no" allow="autoplay"
-      src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/2032601616%3Fsecret_token%3Ds-YD2XOTIG3en&color=%231e161a&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false"></iframe>
-  </div>
-
-  <script src="script.js"></script>
+    <img id="bg" src="garage_bg.png" alt="Garage Background">
+    <div id="menu">
+        <div class="menu-item">ADVENTURE</div>
+        <div class="menu-item">EXHIBITION</div>
+        <div class="menu-item disabled">CUSTOMIZE</div>
+        <div class="menu-item">OPTIONS</div>
+        <div class="menu-item">PROFILE</div>
+        <div class="menu-item">SECRETS SHOP</div>
+    </div>
+    <div id="jukebox">
+        <iframe width="100%" height="100%" scrolling="no" frameborder="no" allow="autoplay"
+            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/2032601616%3Fsecret_token%3Ds-YD2XOTIG3en&color=%231e161a&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false">
+        </iframe>
+    </div>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
