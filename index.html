@@ -4,9 +4,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REDLININ' Garage v1.2.0</title>
+  <title>REDLININ' Garage v1.2.1</title>
   <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    #press-start {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 36px;
+      font-family: 'Draco', sans-serif;
+      color: cyan;
+      text-shadow: 0 0 10px cyan, 0 0 20px cyan;
+      animation: glow 1.5s ease-in-out infinite alternate;
+      z-index: 100;
+    }
+
+    @keyframes glow {
+      from { opacity: 0.6; }
+      to { opacity: 1; }
+    }
+  </style>
 </head>
 <body>
   <div id="video-overlay-container">
@@ -14,6 +33,8 @@
       <source src="dust_overlay_v2.mp4" type="video/mp4" />
     </video>
   </div>
+
+  <div id="press-start">[ PRESS START ]</div>
 
   <img id="hoverCar" class="hover-car" src="hover_ship_cutout.png" alt="Hover Car" />
 
@@ -36,7 +57,6 @@
     let current = 0;
     const audio = new Audio();
     audio.src = tracks[current];
-    audio.autoplay = true;
     audio.loop = false;
     audio.volume = 1.0;
 
@@ -53,7 +73,7 @@
       audio.play();
     });
 
-    // Visualizer setup
+    // Visualizer
     const canvas = document.getElementById("visualizer");
     const ctx = canvas.getContext("2d");
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -77,7 +97,18 @@
       }
     }
 
-    draw();
+    const pressStart = document.getElementById('press-start');
+    function startPlayer() {
+      pressStart.style.opacity = '0';
+      setTimeout(() => {
+        pressStart.style.display = 'none';
+      }, 1000);
+      audioCtx.resume();
+      audio.play();
+      draw();
+    }
+
+    document.addEventListener('keydown', startPlayer, { once: true });
   </script>
 
   <script src="script.js"></script>
