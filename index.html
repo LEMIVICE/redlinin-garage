@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>REDLININ' Garage</title>
+  <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black url('garage_bg.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Draco', sans-serif;
+    }
+    #menu {
+      position: absolute;
+      top: 50px;
+      right: 50px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid #f0f;
+      border-radius: 10px;
+      padding: 20px;
+      color: cyan;
+      text-align: right;
+      font-size: 14px;
+      line-height: 2em;
+    }
+    #menu div {
+      cursor: pointer;
+    }
+    #hoverCar {
+      position: absolute;
+      left: 33%;
+      top: 40%;
+      width: 300px;
+      transform: rotate(-10deg) scale(1.15);
+      animation: hover-bob 3s ease-in-out infinite;
+      z-index: 1;
+    }
+    @keyframes hover-bob {
+      0% { transform: rotate(-10deg) scale(1.15) translateY(0); }
+      50% { transform: rotate(-10deg) scale(1.15) translateY(-15px); }
+      100% { transform: rotate(-10deg) scale(1.15) translateY(0); }
+    }
+    #jukebox {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      width: 250px;
+      height: 100px;
+      border: 2px solid cyan;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="menu">
+    <div>ADVENTURE</div>
+    <div>EXHIBITION</div>
+    <div style="color:gray;">CUSTOMIZE</div>
+    <div>OPTIONS</div>
+    <div>PROFILE</div>
+    <div>SECRETS SHOP</div>
+  </div>
+
+  <img id="hoverCar" src="hover_ship_cutout.png" alt="Hover Car" />
+
+  <div id="jukebox">
+    <iframe width="100%" height="100%" scrolling="no" frameborder="no" allow="autoplay"
+      src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/2032601616%3Fsecret_token%3Ds-YD2XOTIG3en&color=%231e161a&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false">
+    </iframe>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
