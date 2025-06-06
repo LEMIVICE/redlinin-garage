@@ -8,6 +8,11 @@
   <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+    }
     #press-start {
       position: absolute;
       top: 45%;
@@ -18,27 +23,32 @@
       color: cyan;
       text-shadow: 0 0 10px cyan, 0 0 20px cyan;
       animation: glow 1.5s ease-in-out infinite alternate;
-      z-index: 100;
+      z-index: 999;
+      pointer-events: none;
     }
 
     @keyframes glow {
-      from { opacity: 0.6; }
+      from { opacity: 0.4; }
       to { opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <div id="video-overlay-container">
-    <video id="overlay-video" autoplay loop muted playsinline>
-      <source src="dust_overlay_v2.mp4" type="video/mp4" />
+
+  <!-- Dust overlay video -->
+  <div id="video-overlay-container" style="position: absolute; width: 100%; height: 100%; overflow: hidden; z-index: 1; mix-blend-mode: screen;">
+    <video id="overlay-video" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; opacity: 0.5;">
+      <source src="red-dust-slow-v1.mp4" type="video/mp4" />
     </video>
   </div>
 
+  <!-- PRESS START overlay -->
   <div id="press-start">[ PRESS START ]</div>
 
-  <img id="hoverCar" class="hover-car" src="hover_ship_cutout.png" alt="Hover Car" />
+  <!-- Garage elements -->
+  <img id="hoverCar" class="hover-car" src="hover_ship_cutout.png" style="position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); width: 40%;" />
 
-  <div id="menu">
+  <div id="menu" style="position: absolute; top: 10%; right: 5%; z-index: 3; font-family: 'Draco', sans-serif; color: white;">
     <div>ADVENTURE</div>
     <div>EXHIBITION</div>
     <div style="color:gray;">CUSTOMIZE</div>
@@ -47,18 +57,19 @@
     <div>SECRETS SHOP</div>
   </div>
 
-  <div id="jukebox-skin">
-    <img src="mp3_player_skin.png" alt="MP3 Player Skin">
-    <canvas id="visualizer"></canvas>
+  <div id="jukebox-skin" style="position: absolute; bottom: 20px; left: 20px; z-index: 2;">
+    <img src="redlinin mp3 player skin v1.png" alt="MP3 Player Skin" style="width: 240px;">
+    <canvas id="visualizer" width="240" height="50"></canvas>
   </div>
 
   <script>
-    const tracks = ['track_01.mp3', 'track_02.mp3', 'track_03.mp3', 'track_04.mp3', 'track_05.mp3', 'track_06.mp3', 'track_07.mp3', 'track_08.mp3', 'track_09.mp3', 'track_10.mp3', 'track_11.mp3', 'track_12.mp3', 'track_13.mp3', 'track_14.mp3', 'track_15.mp3', 'track_16.mp3', 'track_17.mp3', 'track_18.mp3', 'track_19.mp3', 'track_20.mp3'];
-    let current = 0;
-    const audio = new Audio();
-    audio.src = tracks[current];
-    audio.loop = false;
-    audio.volume = 1.0;
+    const tracks = [
+      "redlinin garage mush v1 (1).mp3", "redlinin garage mush v1 (2).mp3",
+      "redlinin garage mush v1 (3).mp3", "redlinin garage mush v1 (4).mp3",
+      "redlinin garage mush v1 (5).mp3", "redlinin garage mush v1 (6).mp3",
+      "redlinin garage mush v1 (7).mp3", "redlinin garage mush v1 (8).mp3",
+      "redlinin garage mush v1 (9).mp3", "redlinin garage mush v1 (10).mp3"
+    ];
 
     // Shuffle playlist
     for (let i = tracks.length - 1; i > 0; i--) {
@@ -66,14 +77,12 @@
       [tracks[i], tracks[j]] = [tracks[j], tracks[i]];
     }
 
-    // Loop through all tracks
-    audio.addEventListener('ended', () => {
-      current = (current + 1) % tracks.length;
-      audio.src = tracks[current];
-      audio.play();
-    });
+    let currentTrack = 0;
+    const audio = new Audio(tracks[currentTrack]);
+    audio.loop = false;
+    audio.volume = 1;
 
-    // Visualizer
+    // Visualizer setup
     const canvas = document.getElementById("visualizer");
     const ctx = canvas.getContext("2d");
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -97,20 +106,24 @@
       }
     }
 
-    const pressStart = document.getElementById('press-start');
-    function startPlayer() {
-      pressStart.style.opacity = '0';
-      setTimeout(() => {
-        pressStart.style.display = 'none';
-      }, 1000);
+    audio.addEventListener('ended', () => {
+      currentTrack = (currentTrack + 1) % tracks.length;
+      audio.src = tracks[currentTrack];
+      audio.play();
+    });
+
+    // PRESS START logic
+    const pressStart = document.getElementById("press-start");
+    function activateStart() {
+      pressStart.style.transition = "opacity 1s ease-out";
+      pressStart.style.opacity = 0;
+      setTimeout(() => { pressStart.style.display = "none"; }, 1000);
       audioCtx.resume();
       audio.play();
       draw();
     }
 
-    document.addEventListener('keydown', startPlayer, { once: true });
+    document.addEventListener("keydown", activateStart, { once: true });
   </script>
-
-  <script src="script.js"></script>
 </body>
 </html>
