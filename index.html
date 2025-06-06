@@ -2,37 +2,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REDLININ' Garage</title>
-  <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>REDLININ' MP3 Player v2.0</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .player {
+      position: relative;
+      width: 512px;
+      height: 512px;
+      background-image: url('mp3_player_skin.png');
+      background-size: cover;
+    }
+    canvas {
+      position: absolute;
+      bottom: 80px;
+      left: 32px;
+      width: 448px;
+      height: 60px;
+      z-index: 2;
+    }
+  </style>
 </head>
 <body>
-  <div id="video-overlay-container">
-    <video id="overlay-video" autoplay loop muted playsinline>
-      <source src="dust_overlay_v2.mp4" type="video/mp4" />
-    </video>
+  <div class="player">
+    <canvas id="visualizer"></canvas>
   </div>
+  <script>
+    const tracks = ['track_01.mp3', 'track_02.mp3', 'track_03.mp3', 'track_04.mp3', 'track_05.mp3', 'track_06.mp3', 'track_07.mp3', 'track_08.mp3', 'track_09.mp3', 'track_10.mp3', 'track_11.mp3', 'track_12.mp3', 'track_13.mp3', 'track_14.mp3', 'track_15.mp3', 'track_16.mp3', 'track_17.mp3', 'track_18.mp3', 'track_19.mp3', 'track_20.mp3'];
+    let current = 0;
+    const audio = new Audio();
+    audio.src = tracks[current];
+    audio.autoplay = true;
+    audio.loop = false;
+    audio.volume = 1.0;
 
-  <img id="hoverCar" class="hover-car" src="hover_ship_cutout.png" alt="Hover Car" />
+    // Shuffle on load
+    for (let i = tracks.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [tracks[i], tracks[j]] = [tracks[j], tracks[i]];
+    }
 
-  <div id="menu">
-    <div>ADVENTURE</div>
-    <div>EXHIBITION</div>
-    <div style="color:gray;">CUSTOMIZE</div>
-    <div>OPTIONS</div>
-    <div>PROFILE</div>
-    <div>SECRETS SHOP</div>
-  </div>
+    // Loop all tracks
+    audio.addEventListener('ended', () => {
+      current = (current + 1) % tracks.length;
+      audio.src = tracks[current];
+      audio.play();
+    });
 
-  <div id="jukebox-skin">
-    <img src="mp3_player_skin.png" alt="MP3 Player Skin">
-    <iframe class="soundcloud-hidden" scrolling="no" frameborder="no" allow="autoplay"
-      src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/2032601616%3Fsecret_token%3Ds-YD2XOTIG3en&color=%231e161a&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false">
-    </iframe>
-  </div>
+    // Visualizer
+    const canvas = document.getElementById("visualizer");
+    const ctx = canvas.getContext("2d");
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const analyser = audioCtx.createAnalyser();
+    const source = audioCtx.createMediaElementSource(audio);
+    source.connect(analyser);
+    analyser.connect(audioCtx.destination);
+    analyser.fftSize = 64;
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
 
-  <script src="script.js"></script>
+    function draw() {
+      requestAnimationFrame(draw);
+      analyser.getByteFrequencyData(dataArray);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const barWidth = (canvas.width / bufferLength) * 1.5;
+      for (let i = 0; i < bufferLength; i++) {
+        const barHeight = dataArray[i] / 2;
+        ctx.fillStyle = 'lime';
+        ctx.fillRect(i * barWidth, canvas.height - barHeight, barWidth - 2, barHeight);
+      }
+    }
+
+    draw();
+  </script>
 </body>
 </html>
