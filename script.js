@@ -1,1 +1,1 @@
-console.log('garage v1.1.8 loaded with MP3 HUD.');
+console.log('REDLININ Garage v1.2.0 with embedded MP3 player loaded.');
