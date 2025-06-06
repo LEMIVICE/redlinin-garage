@@ -1,83 +1,63 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REDLININ' Garage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redlinin' Garage</title>
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       overflow: hidden;
       background: black;
     }
-
-    #webgl {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
+    canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
       z-index: 0;
     }
-
-    .menu {
+    #menu {
       position: absolute;
-      top: 40px;
-      right: 60px;
-      background: rgba(0, 0, 0, 0.6);
-      border: 2px solid #ff0080;
-      border-radius: 12px;
+      top: 50px;
+      right: 50px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid #f0f;
       padding: 20px;
       font-family: sans-serif;
       color: cyan;
       z-index: 2;
+      border-radius: 10px;
     }
-
-    .menu div {
-      margin: 8px 0;
-      cursor: pointer;
-    }
-
-    .jukebox-container {
+    #jukebox {
       position: absolute;
-      bottom: 20px;
-      left: 20px;
-      width: 320px;
-      height: 140px;
-      background: rgba(20, 10, 30, 0.9);
-      border: 2px solid #00ffff;
-      border-radius: 12px;
-      padding: 8px;
+      bottom: 10px;
+      left: 10px;
+      width: 300px;
       z-index: 2;
-      box-shadow: 0 0 10px #00ffff;
-    }
-
-    .jukebox-container iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      border-radius: 8px;
+      border: 2px solid #0ff;
+      border-radius: 10px;
+      overflow: hidden;
+      background-color: black;
     }
   </style>
 </head>
 <body>
-  <canvas id="webgl"></canvas>
-
-  <div class="menu">
+  <div id="menu">
     <div>ADVENTURE</div>
     <div>EXHIBITION</div>
-    <div style="opacity:0.3;">CUSTOMIZE</div>
+    <div style="color:gray">CUSTOMIZE</div>
     <div>OPTIONS</div>
     <div>PROFILE</div>
     <div>SECRETS SHOP</div>
   </div>
-
-  <div class="jukebox-container">
-    <iframe scrolling="no" allow="autoplay"
-      src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/2032601616%3Fsecret_token%3Ds-YD2XOTIG3en&color=%231e161a&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false">
-    </iframe>
+  <div id="jukebox">
+    <iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay"
+      src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/2032601616%3Fsecret_token%3Ds-YD2XOTIG3en&color=%231e161a&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false"></iframe>
   </div>
-
-  <script type="module" src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
