@@ -21,6 +21,7 @@ body {
   font-size: 14px;
   line-height: 2em;
   font-family: 'Draco', sans-serif;
+  z-index: 10;
 }
 
 #menu div {
