@@ -3,63 +3,69 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>REDLININ' Garage</title>
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
       overflow: hidden;
-      font-family: sans-serif;
-    }
-    #bg {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background: url('garage_bg.png') center center no-repeat;
-      background-size: cover;
-      z-index: 0;
+      background: black;
     }
     #webgl {
       position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
     }
-    #menu {
-      position: fixed;
-      right: 40px;
-      top: 80px;
-      z-index: 2;
-      background: rgba(0,0,0,0.65);
-      border: 2px solid #ff0077;
+    .menu {
+      position: absolute;
+      top: 40px;
+      right: 60px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid #ff0080;
+      border-radius: 12px;
       padding: 20px;
-      border-radius: 10px;
-      color: #00ffff;
-      box-shadow: 0 0 15px #ff0077;
+      font-family: sans-serif;
+      color: cyan;
+      z-index: 2;
     }
-    #menu div {
-      padding: 8px 12px;
-      margin-bottom: 6px;
+    .menu div {
+      margin: 8px 0;
       cursor: pointer;
     }
-    #menu div:hover {
-      background: #ff0077;
-      color: #000;
+    .jukebox {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      z-index: 1;
     }
   </style>
 </head>
 <body>
-  <div id="bg"></div>
   <canvas id="webgl"></canvas>
-  <div id="menu">
+
+  <div class="menu">
     <div>ADVENTURE</div>
     <div>EXHIBITION</div>
-    <div style="opacity: 0.4;">CUSTOMIZE</div>
+    <div style="opacity:0.3;">CUSTOMIZE</div>
     <div>OPTIONS</div>
     <div>PROFILE</div>
     <div>SECRETS SHOP</div>
   </div>
+
+  <div class="jukebox">
+    <iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay"
+      src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/2032601616%3Fsecret_token%3Ds-YD2XOTIG3en&color=%231e161a&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true">
+    </iframe>
+    <div style="font-size: 10px; color: #cccccc; line-break: anywhere; word-break: normal;
+      overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+      font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif; font-weight: 100;">
+      <a href="https://soundcloud.com/lemivice" title="LEMI VICE" target="_blank" style="color: #cccccc; text-decoration: none;">LEMI VICE</a> · 
+      <a href="https://soundcloud.com/lemivice/sets/redlin-garage-jukebox/s-YD2XOTIG3en" title="REDLIN GARAGE JUKEBOX" target="_blank" style="color: #cccccc; text-decoration: none;">REDLIN GARAGE JUKEBOX</a>
+    </div>
+  </div>
+
   <script type="module" src="script.js"></script>
 </body>
 </html>
