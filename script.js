@@ -1,1 +1,1 @@
-console.log('garage app loaded.');
+console.log('garage v1.1.8 loaded with MP3 HUD.');
