@@ -8,56 +8,48 @@ body {
   overflow: hidden;
 }
 
-.menu {
+#menu {
   position: absolute;
-  top: 40px;
-  right: 40px;
-  background: rgba(0, 0, 0, 0.6);
+  top: 50px;
+  right: 50px;
+  background: rgba(0, 0, 0, 0.7);
   border: 2px solid #f0f;
   border-radius: 10px;
-  padding: 10px 20px;
-  color: #0ff;
+  padding: 20px;
+  color: cyan;
+  text-align: right;
+  font-size: 14px;
+  line-height: 2em;
 }
 
-.menu ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.menu li {
-  margin: 8px 0;
-  font-weight: bold;
-}
-
-.menu .disabled {
-  opacity: 0.4;
-  pointer-events: none;
+#menu div {
+  cursor: pointer;
 }
 
 .hover-car {
   position: absolute;
   left: 50%;
-  top: 55%;
-  width: 600px;
+  top: 50%;
+  width: 1200px;
   max-width: 90vw;
   transform: translate(-50%, -50%);
   animation: float 4s ease-in-out infinite;
+  z-index: 1;
 }
 
 @keyframes float {
-  0% { transform: translate(-50%, -52%) rotate(-1deg); }
-  50% { transform: translate(-50%, -48%) rotate(1deg); }
-  100% { transform: translate(-50%, -52%) rotate(-1deg); }
+  0%   { transform: translate(-50%, -51%); }
+  50%  { transform: translate(-50%, -49%); }
+  100% { transform: translate(-50%, -51%); }
 }
 
-.jukebox {
+#jukebox {
   position: absolute;
-  bottom: 20px;
-  left: 20px;
-  width: 240px;
-  height: 120px;
-  border: 3px solid #0ff;
-  border-radius: 12px;
+  bottom: 10px;
+  left: 10px;
+  width: 250px;
+  height: 100px;
+  border: 2px solid cyan;
+  border-radius: 10px;
   overflow: hidden;
 }

@@ -6,55 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>REDLININ' Garage</title>
   <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: black url('garage_bg.png') no-repeat center center fixed;
-      background-size: cover;
-      font-family: 'Draco', sans-serif;
-    }
-    #menu {
-      position: absolute;
-      top: 50px;
-      right: 50px;
-      background: rgba(0, 0, 0, 0.7);
-      border: 2px solid #f0f;
-      border-radius: 10px;
-      padding: 20px;
-      color: cyan;
-      text-align: right;
-      font-size: 14px;
-      line-height: 2em;
-    }
-    #menu div {
-      cursor: pointer;
-    }
-    #hoverCar {
-      position: absolute;
-      left: 33%;
-      top: 40%;
-      width: 300px;
-      transform: rotate(-10deg) scale(1.15);
-      animation: hover-bob 3s ease-in-out infinite;
-      z-index: 1;
-    }
-    @keyframes hover-bob {
-      0% { transform: rotate(-10deg) scale(1.15) translateY(0); }
-      50% { transform: rotate(-10deg) scale(1.15) translateY(-15px); }
-      100% { transform: rotate(-10deg) scale(1.15) translateY(0); }
-    }
-    #jukebox {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      width: 250px;
-      height: 100px;
-      border: 2px solid cyan;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="menu">
@@ -66,7 +18,7 @@
     <div>SECRETS SHOP</div>
   </div>
 
-  <img id="hoverCar" src="hover_ship_cutout.png" alt="Hover Car" />
+  <img id="hoverCar" class="hover-car" src="hover_ship_cutout.png" alt="Hover Car" />
 
   <div id="jukebox">
     <iframe width="100%" height="100%" scrolling="no" frameborder="no" allow="autoplay"
