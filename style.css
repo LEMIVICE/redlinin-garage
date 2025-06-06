@@ -29,7 +29,7 @@ body {
 .hover-car {
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 58%;
   width: 1200px;
   max-width: 90vw;
   transform: translate(-50%, -50%);
@@ -38,9 +38,9 @@ body {
 }
 
 @keyframes float {
-  0%   { transform: translate(-50%, -51%); }
-  50%  { transform: translate(-50%, -49%); }
-  100% { transform: translate(-50%, -51%); }
+  0%   { transform: translate(-50%, -50%); }
+  50%  { transform: translate(-50%, -48%); }
+  100% { transform: translate(-50%, -50%); }
 }
 
 #jukebox {
