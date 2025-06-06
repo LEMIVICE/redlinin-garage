@@ -1,45 +1,39 @@
-
-import * as THREE from 'https://cdn.skypack.dev/three@0.150.1';
-import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.150.1/examples/jsm/loaders/GLTFLoader.js';
-
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.1, 1000);
-camera.position.set(0, 1.5, 4);
-
-const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('webgl'), alpha: true });
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
+document.body.appendChild(renderer.domElement);
 
-const light = new THREE.PointLight(0xffffff, 1.2);
-light.position.set(2, 3, 5);
+const light = new THREE.PointLight(0xffffff, 2, 100);
+light.position.set(10, 10, 10);
 scene.add(light);
 
-const ambient = new THREE.AmbientLight(0x404040);
-scene.add(ambient);
-
-const loader = new GLTFLoader();
-let car;
-loader.load('hover_car.glb', (gltf) => {
-    car = gltf.scene;
-    car.scale.set(1.2, 1.2, 1.2);
-    car.position.set(0, 0.1, 0);
-    scene.add(car);
+const loader = new THREE.TextureLoader();
+loader.load('garage_bg.png', function(texture) {
+  const bgMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(16, 9),
+    new THREE.MeshBasicMaterial({ map: texture })
+  );
+  bgMesh.position.z = -5;
+  scene.add(bgMesh);
 });
 
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});
+const gltfLoader = new THREE.GLTFLoader();
+gltfLoader.load('hover_car.glb', function(gltf) {
+  const model = gltf.scene;
+  model.scale.set(1.5, 1.5, 1.5);
+  model.position.set(0, -1.5, 0);
+  scene.add(model);
 
-let clock = new THREE.Clock();
-function animate() {
+  let t = 0;
+  function animate() {
     requestAnimationFrame(animate);
-    let t = clock.getElapsedTime();
-    if (car) {
-        car.rotation.y = t * 0.5;
-        car.position.y = 0.1 + Math.sin(t * 2) * 0.05;
-    }
+    t += 0.01;
+    model.position.y = -1.5 + Math.sin(t) * 0.1;
+    model.rotation.y += 0.005;
     renderer.render(scene, camera);
-}
-animate();
+  }
+  animate();
+});
+
+camera.position.z = 5;
