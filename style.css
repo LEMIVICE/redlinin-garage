@@ -17,6 +17,7 @@ body {
   z-index: 5;
   pointer-events: none;
   mix-blend-mode: screen;
+  opacity: 0.5;
 }
 
 #overlay-video {
