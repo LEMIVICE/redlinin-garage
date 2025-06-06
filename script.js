@@ -1,1 +1,1 @@
-console.log("garage app loaded.");
+console.log('garage app loaded.');
