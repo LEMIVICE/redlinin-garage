@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REDLININ' Garage v1.2.5</title>
+  <title>REDLININ' Garage v1.2.4</title>
   <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
@@ -13,7 +13,6 @@
       overflow: hidden;
       background: url('garage_bg.png') no-repeat center center fixed;
       background-size: cover;
-      font-family: 'Draco', sans-serif;
     }
 
     #press-start {
@@ -22,10 +21,11 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 36px;
+      font-family: 'Draco', sans-serif;
       color: cyan;
       text-shadow: 0 0 10px cyan, 0 0 20px cyan;
       animation: glow 1.5s ease-in-out infinite alternate;
-      z-index: 10;
+      z-index: 999;
       pointer-events: none;
     }
 
@@ -35,14 +35,12 @@
     }
 
     #video-overlay-container {
-      position: fixed;
+      position: absolute;
       width: 100%;
       height: 100%;
-      top: 0;
-      left: 0;
-      z-index: 1;
+      overflow: hidden;
+      z-index: 5;
       mix-blend-mode: screen;
-      opacity: 0.5;
       pointer-events: none;
     }
 
@@ -50,50 +48,27 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-    }
-
-    #hoverCar {
-      position: absolute;
-      bottom: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 40%;
-      z-index: 5;
-    }
-
-    #menu {
-      position: absolute;
-      top: 10%;
-      right: 5%;
-      z-index: 10;
-      color: white;
-    }
-
-    #jukebox-skin {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      z-index: 10;
+      opacity: 0.5;
     }
   </style>
 </head>
 <body>
 
-  <!-- Dust overlay video (correct blend + opacity) -->
+  <!-- Dust overlay video -->
   <div id="video-overlay-container">
     <video id="overlay-video" autoplay loop muted playsinline>
       <source src="dust_overlay_v2.mp4" type="video/mp4" />
     </video>
   </div>
 
-  <!-- PRESS START -->
+  <!-- PRESS START overlay -->
   <div id="press-start">[ PRESS START ]</div>
 
   <!-- Hover car -->
-  <img id="hoverCar" src="hover_ship_cutout.png" alt="Hover Car"/>
+  <img id="hoverCar" class="hover-car" src="hover_ship_cutout.png" style="position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); width: 40%; z-index: 2;" />
 
   <!-- Menu -->
-  <div id="menu">
+  <div id="menu" style="position: absolute; top: 10%; right: 5%; z-index: 10; font-family: 'Draco', sans-serif; color: white;">
     <div>ADVENTURE</div>
     <div>EXHIBITION</div>
     <div style="color:gray;">CUSTOMIZE</div>
@@ -102,8 +77,8 @@
     <div>SECRETS SHOP</div>
   </div>
 
-  <!-- MP3 HUD skin -->
-  <div id="jukebox-skin">
+  <!-- MP3 skin + visualizer -->
+  <div id="jukebox-skin" style="position: absolute; bottom: 20px; left: 20px; z-index: 20;">
     <img src="mp3_player_skin.png" alt="MP3 Player Skin" style="width: 240px;">
     <canvas id="visualizer" width="240" height="50"></canvas>
   </div>
