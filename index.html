@@ -1,146 +1,38 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REDLININ' Garage v1.2.4</title>
+  <title>REDLININ' Garage v1.3.0</title>
   <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: url('garage_bg.png') no-repeat center center fixed;
-      background-size: cover;
-    }
-
-    #press-start {
-      position: absolute;
-      top: 45%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 36px;
-      font-family: 'Draco', sans-serif;
-      color: cyan;
-      text-shadow: 0 0 10px cyan, 0 0 20px cyan;
-      animation: glow 1.5s ease-in-out infinite alternate;
-      z-index: 999;
-      pointer-events: none;
-    }
-
-    @keyframes glow {
-      from { opacity: 0.4; }
-      to { opacity: 1; }
-    }
-
-    #video-overlay-container {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: 5;
-      mix-blend-mode: screen;
-      pointer-events: none;
-    }
-
-    #overlay-video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.5;
-    }
-  </style>
 </head>
 <body>
 
-  <!-- Dust overlay video -->
   <div id="video-overlay-container">
     <video id="overlay-video" autoplay loop muted playsinline>
       <source src="dust_overlay_v2.mp4" type="video/mp4" />
     </video>
   </div>
 
-  <!-- PRESS START overlay -->
   <div id="press-start">[ PRESS START ]</div>
 
-  <!-- Hover car -->
-  <img id="hoverCar" class="hover-car" src="hover_ship_cutout.png" style="position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); width: 40%; z-index: 2;" />
+  <img id="hoverCar" class="hover-car" src="hover_ship_cutout.png" alt="Hover Ship" />
 
-  <!-- Menu -->
-  <div id="menu" style="position: absolute; top: 10%; right: 5%; z-index: 10; font-family: 'Draco', sans-serif; color: white;">
-    <div>ADVENTURE</div>
-    <div>EXHIBITION</div>
-    <div style="color:gray;">CUSTOMIZE</div>
-    <div>OPTIONS</div>
-    <div>PROFILE</div>
-    <div>SECRETS SHOP</div>
+  <div id="menu">
+    <div class="menu-item">ADVENTURE</div>
+    <div class="menu-item">EXHIBITION</div>
+    <div class="menu-item disabled">CUSTOMIZE</div>
+    <div class="menu-item">OPTIONS</div>
+    <div class="menu-item">PROFILE</div>
+    <div class="menu-item">SECRETS SHOP</div>
   </div>
 
-  <!-- MP3 skin + visualizer -->
-  <div id="jukebox-skin" style="position: absolute; bottom: 20px; left: 20px; z-index: 20;">
-    <img src="mp3_player_skin.png" alt="MP3 Player Skin" style="width: 240px;">
-    <canvas id="visualizer" width="240" height="50"></canvas>
+  <div id="jukebox-skin">
+    <img src="mp3_player_skin.png" alt="MP3 Player Skin">
+    <canvas id="visualizer"></canvas>
   </div>
 
-  <script>
-    const tracks = [
-      "track_01.mp3", "track_02.mp3", "track_03.mp3", "track_04.mp3", "track_05.mp3",
-      "track_06.mp3", "track_07.mp3", "track_08.mp3", "track_09.mp3", "track_10.mp3",
-      "track_11.mp3", "track_12.mp3", "track_13.mp3", "track_14.mp3", "track_15.mp3",
-      "track_16.mp3", "track_17.mp3", "track_18.mp3", "track_19.mp3", "track_20.mp3"
-    ];
-
-    for (let i = tracks.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [tracks[i], tracks[j]] = [tracks[j], tracks[i]];
-    }
-
-    let currentTrack = 0;
-    const audio = new Audio(tracks[currentTrack]);
-    audio.loop = false;
-    audio.volume = 1;
-
-    const canvas = document.getElementById("visualizer");
-    const ctx = canvas.getContext("2d");
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const analyser = audioCtx.createAnalyser();
-    const source = audioCtx.createMediaElementSource(audio);
-    source.connect(analyser);
-    analyser.connect(audioCtx.destination);
-    analyser.fftSize = 64;
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-
-    function draw() {
-      requestAnimationFrame(draw);
-      analyser.getByteFrequencyData(dataArray);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const barWidth = (canvas.width / bufferLength) * 1.5;
-      for (let i = 0; i < bufferLength; i++) {
-        const barHeight = dataArray[i] / 2;
-        ctx.fillStyle = 'lime';
-        ctx.fillRect(i * barWidth, canvas.height - barHeight, barWidth - 2, barHeight);
-      }
-    }
-
-    audio.addEventListener('ended', () => {
-      currentTrack = (currentTrack + 1) % tracks.length;
-      audio.src = tracks[currentTrack];
-      audio.play();
-    });
-
-    const pressStart = document.getElementById("press-start");
-    function activateStart() {
-      pressStart.style.transition = "opacity 1s ease-out";
-      pressStart.style.opacity = 0;
-      setTimeout(() => { pressStart.style.display = "none"; }, 1000);
-      audioCtx.resume();
-      audio.play();
-      draw();
-    }
-
-    document.addEventListener("keydown", activateStart, { once: true });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

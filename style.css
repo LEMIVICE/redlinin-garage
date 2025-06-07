@@ -1,4 +1,3 @@
-
 body {
   margin: 0;
   padding: 0;
@@ -6,6 +5,25 @@ body {
   background-size: cover;
   font-family: 'Draco', sans-serif;
   overflow: hidden;
+  color: white;
+}
+
+#press-start {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 36px;
+  color: cyan;
+  text-shadow: 0 0 10px cyan, 0 0 20px cyan;
+  animation: glow 1.5s ease-in-out infinite alternate;
+  z-index: 999;
+  pointer-events: none;
+}
+
+@keyframes glow {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
 }
 
 #video-overlay-container {
@@ -17,71 +35,80 @@ body {
   z-index: 5;
   pointer-events: none;
   mix-blend-mode: screen;
-  opacity: 0.5;
 }
 
 #overlay-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-#menu {
-  position: absolute;
-  top: 50px;
-  right: 50px;
-  background: rgba(0, 0, 0, 0.7);
-  border: 2px solid #f0f;
-  border-radius: 10px;
-  padding: 20px;
-  color: cyan;
-  text-align: right;
-  font-size: 14px;
-  line-height: 2em;
-  font-family: 'Draco', sans-serif;
-  z-index: 10;
-}
-
-#menu div {
-  cursor: pointer;
+  opacity: 0.5;
 }
 
 .hover-car {
   position: absolute;
+  bottom: 10%;
   left: 50%;
-  top: 61%;
-  width: 1200px;
-  max-width: 90vw;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
+  width: 40%;
+  z-index: 2;
   animation: float 4s ease-in-out infinite;
-  z-index: 1;
 }
 
 @keyframes float {
-  0%   { transform: translate(-50%, -50%); }
-  50%  { transform: translate(-50%, -48%); }
-  100% { transform: translate(-50%, -50%); }
+  0%   { transform: translate(-50%, 0%); }
+  50%  { transform: translate(-50%, -2%); }
+  100% { transform: translate(-50%, 0%); }
+}
+
+#menu {
+  position: absolute;
+  top: 10%;
+  right: 5%;
+  z-index: 10;
+  font-family: 'Draco', sans-serif;
+  text-align: right;
+}
+
+.menu-item {
+  font-size: 22px;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  color: cyan;
+  text-shadow: 0 0 8px fuchsia;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.menu-item:hover {
+  color: yellow;
+  transform: translateX(-15px);
+  text-shadow: 0 0 12px yellow;
+}
+
+.menu-item.disabled {
+  color: gray;
+  text-shadow: none;
+  pointer-events: none;
+  cursor: default;
 }
 
 #jukebox-skin {
   position: absolute;
   bottom: 20px;
   left: 20px;
-  width: 256px;
-  height: 256px;
   z-index: 20;
+  width: 240px;
+  height: auto;
 }
 
 #jukebox-skin img {
   width: 100%;
-  height: auto;
-  display: block;
 }
 
-#jukebox-skin canvas {
+#visualizer {
   position: absolute;
-  bottom: 68px;
-  left: 32px;
+  bottom: 56px;
+  left: 25px;
   width: 192px;
   height: 40px;
 }
