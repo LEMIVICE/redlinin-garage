@@ -1,226 +1,240 @@
-/* --- Basic Setup --- */
+/* --- Basic Setup & Custom Cursor --- */
 body {
-  margin: 0;
-  padding: 0;
+  margin: 0; padding: 0;
   background-color: #000;
   font-family: 'Draco', sans-serif;
   overflow: hidden;
   color: white;
+  cursor: none; /* Hide default cursor */
 }
 
-/* --- Scene and Parallax --- */
+#custom-cursor {
+  position: fixed;
+  width: 25px; height: 25px;
+  border: 2px solid cyan;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease-out, background-color 0.2s ease;
+  box-shadow: 0 0 10px cyan, inset 0 0 10px cyan;
+}
+
+#custom-cursor.clicked {
+    transform: translate(-50%, -50%) scale(0.8);
+    background-color: rgba(0, 255, 255, 0.5);
+}
+
+/* --- Scene & Animations --- */
 #scene {
   position: relative;
-  width: 100vw;
-  height: 100vh;
+  width: 100vw; height: 100vh;
   overflow: hidden;
-  transition: transform 0.2s ease-out; /* For parallax effect */
+  transition: transform 0.2s ease-out;
 }
-
 #background-layer {
-    position: absolute;
-    top: -5%; left: -5%;
-    width: 110%; height: 110%;
-    background: url('garage_bg.png') no-repeat center center;
-    background-size: cover;
+  position: absolute; top: -5%; left: -5%;
+  width: 110%; height: 110%;
+  background: url('garage_bg.png') no-repeat center center;
+  background-size: cover;
+  transition: filter 1s ease;
 }
-
 #hover-car-container {
-    position: absolute;
-    width: 45%; /* Adjust size of the car */
-    bottom: 8%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3;
-    animation: float 4s ease-in-out infinite;
+  position: absolute; width: 45%;
+  bottom: 8%; left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  animation: float 4s ease-in-out infinite;
 }
-
-#hoverCar {
-  width: 100%;
-}
-
+#hoverCar { width: 100%; }
 @keyframes float {
-  0%   { transform: translate(-50%, 0%); }
-  50%  { transform: translate(-50%, -2%); }
-  100% { transform: translate(-50%, 0%); }
+  0%, 100% { transform: translate(-50%, 0%); }
+  50% { transform: translate(-50%, -2%); }
 }
-
-/* --- Engine Glow --- */
+.thruster-glow {
+  position: absolute; bottom: 22%; left: 15%;
+  width: 10%; height: 15%;
+  background: #00f; border-radius: 50%;
+  filter: blur(20px); opacity: 0.7;
+  animation: pulse 3s ease-in-out infinite alternate;
+}
 #engine-glow {
-    position: absolute;
-    bottom: 18%;
-    right: 22%;
-    width: 25%;
-    height: 25%;
-    background-color: red;
-    border-radius: 50%;
-    filter: blur(30px);
-    opacity: 0.6;
-    animation: pulse 2s ease-in-out infinite alternate;
+  position: absolute; bottom: 18%; right: 22%;
+  width: 25%; height: 25%;
+  background-color: red; border-radius: 50%;
+  filter: blur(30px); opacity: 0.6;
+  animation: pulse 2.5s ease-in-out infinite alternate-reverse;
+  transition: all 0.1s ease-out;
 }
-
+#engine-glow.flare {
+    transform: scale(2.5);
+    filter: blur(40px);
+    opacity: 1;
+}
 @keyframes pulse {
-    from { opacity: 0.4; transform: scale(0.95); }
-    to { opacity: 0.7; transform: scale(1.05); }
+  from { opacity: 0.5; transform: scale(0.95); }
+  to { opacity: 0.8; transform: scale(1.05); }
 }
-
 
 /* --- Video Overlay --- */
 #video-overlay-container {
-  position: absolute;
-  top: 0; left: 0;
+  position: absolute; top: 0; left: 0;
   width: 100%; height: 100%;
-  z-index: 5;
-  pointer-events: none;
+  z-index: 5; pointer-events: none;
   mix-blend-mode: screen;
 }
-
 #overlay-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.4;
+  width: 100%; height: 100%;
+  object-fit: cover; opacity: 0.4;
 }
 
 /* --- UI Layer --- */
 #ui-layer {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 10;
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 10;
 }
-
 #press-start {
-  position: absolute;
-  top: 45%;
-  left: 50%;
+  position: absolute; top: 45%; left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 36px;
-  color: cyan;
+  font-size: 36px; color: cyan;
   text-shadow: 0 0 10px cyan, 0 0 20px cyan;
   animation: glow 1.5s ease-in-out infinite alternate;
-  z-index: 999;
-  pointer-events: none;
+  z-index: 999; pointer-events: none;
 }
+@keyframes glow { from { opacity: 0.4; } to { opacity: 1; } }
 
-@keyframes glow {
-  from { opacity: 0.4; }
-  to { opacity: 1; }
+/* --- Menu Reveal & Styling --- */
+#menu-container {
+    position: absolute;
+    top: 15%; right: 0;
+    width: 350px;
+    transform: translateX(100%);
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
-
-/* --- Menu --- */
+#menu-container.visible {
+    transform: translateX(0);
+}
 #menu {
-  position: absolute;
-  top: 15%;
-  right: 7%;
+  position: relative;
   text-align: right;
+  padding-right: 50px;
 }
-
 .menu-item {
-  font-size: 24px;
-  padding: 8px 0;
-  margin-bottom: 15px;
-  color: cyan;
-  text-shadow: 0 0 8px fuchsia;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  font-size: 24px; padding: 8px 0; margin-bottom: 15px;
+  color: cyan; text-shadow: 0 0 8px fuchsia;
+  cursor: none; transition: all 0.2s ease-in-out;
   opacity: 0.7;
 }
-
-/* State for keyboard/mouse selection */
 .menu-item.selected {
-  color: yellow;
-  transform: translateX(-20px);
-  opacity: 1;
-  text-shadow: 0 0 12px yellow;
+  color: yellow; transform: translateX(-20px);
+  opacity: 1; text-shadow: 0 0 12px yellow;
 }
-
 .menu-item.disabled {
-  color: #555;
-  text-shadow: none;
-  pointer-events: none;
-  cursor: default;
-  opacity: 0.4;
+  color: #555; text-shadow: none;
+  pointer-events: none; opacity: 0.4;
 }
-
 #menu-selector {
-    position: absolute;
-    right: -30px; /* Position it to the left of the menu items */
-    font-size: 24px;
-    color: yellow;
-    text-shadow: 0 0 12px yellow;
-    transition: top 0.2s ease-in-out;
-    opacity: 0; /* Hidden by default */
+  position: absolute; right: 20px;
+  font-size: 24px; color: yellow;
+  text-shadow: 0 0 12px yellow;
+  transition: top 0.2s ease-in-out, opacity 0.2s;
+  opacity: 0;
 }
-
-/* --- Jukebox --- */
-#jukebox-skin {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  z-index: 20;
-  width: 240px;
+#menu-selector.blink {
+    animation: blink-anim 0.1s 3;
 }
+@keyframes blink-anim { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-#jukebox-skin img {
-    width: 100%;
+/* --- Jukebox & RPM Meter --- */
+#jukebox-container {
+    position: absolute; bottom: 20px; left: 20px;
+    z-index: 20; width: 240px;
+    transition: transform 1s ease;
 }
-
+.jukebox-bg { width: 100%; }
 #visualizer {
-    position: absolute;
-    bottom: 56px;
-    left: 25px;
-    width: 192px;
-    height: 40px;
+    position: absolute; bottom: 85px; left: 25px;
+    width: 192px; height: 40px;
 }
-
-#track-display {
-    position: absolute;
-    top: 50px;
-    left: 25px;
-    width: 192px;
-    height: 40px;
-    text-align: center;
-    color: lime;
-    font-family: monospace;
-    font-size: 12px;
-    text-shadow: 0 0 5px lime;
+#rpm-meter {
+    position: absolute; bottom: 135px; left: 95px;
+    width: 50px; height: 25px;
     overflow: hidden;
 }
+#rpm-needle {
+    width: 100%; height: 200%;
+    background-color: red;
+    transform-origin: 50% 100%;
+    transition: transform 0.2s ease-out;
+    transform: rotate(-45deg); /* Start position */
+}
+#track-display {
+    position: absolute; top: 50px; left: 25px;
+    width: 192px; height: 40px;
+    text-align: center; color: lime;
+    font-family: monospace; font-size: 12px;
+    text-shadow: 0 0 5px lime; overflow: hidden;
+}
+#track-name { margin: 0; white-space: nowrap; }
+#track-name.marquee { animation: marquee 10s linear infinite; }
+@keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-#track-name {
-    margin: 0;
-    white-space: nowrap;
-    animation: marquee 10s linear infinite;
+/* Jukebox Controls */
+#jukebox-controls {
+    position: absolute; bottom: 45px; width: 100%;
+    display: flex; justify-content: center;
+    gap: 20px;
+}
+.control-button {
+    font-size: 20px; color: cyan;
+    cursor: none; text-shadow: 0 0 8px cyan;
+    transition: all 0.2s;
+}
+.control-button:hover { color: yellow; transform: scale(1.2); }
+#volume-container {
+    position: absolute; bottom: 15px; width: 100%;
+    display: flex; justify-content: center; align-items: center;
+    gap: 5px; opacity: 0; transition: opacity 0.3s;
+}
+#jukebox-container:hover #volume-container { opacity: 1; }
+#volume-icon { font-size: 14px; }
+#volume-slider { -webkit-appearance: none; appearance: none;
+    width: 100px; height: 5px; background: #333;
+    border-radius: 5px; cursor: none;
+}
+#volume-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none;
+    width: 12px; height: 12px; background: cyan;
+    border-radius: 50%; box-shadow: 0 0 5px cyan;
 }
 
-@keyframes marquee {
-    0%   { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-}
-
-
-/* --- Message Screen --- */
+/* --- Message Screen & Attract Mode --- */
 #message-screen {
-    position: absolute;
-    top: 0; left: 0;
+    position: absolute; top: 0; left: 0;
     width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-    opacity: 1;
+    background-color: rgb(0,0,0);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    z-index: 100; opacity: 1;
     transition: opacity 0.5s ease;
 }
-
-#message-screen.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-
+#message-screen.hidden { opacity: 0; pointer-events: none; }
 #message-text {
-    font-size: 32px;
-    color: cyan;
-    text-shadow: 0 0 10px cyan;
+    font-size: 32px; color: cyan; text-shadow: 0 0 10px cyan;
+    animation: pulse-text 2s ease-in-out infinite alternate;
+}
+@keyframes pulse-text { from { opacity: 0.7; } to { opacity: 1; } }
+#back-button {
+    margin-top: 40px; font-size: 20px;
+    color: yellow; text-shadow: 0 0 10px yellow;
+    cursor: none; opacity: 0;
+    transition: opacity 0.3s 0.5s; /* Delay appearance */
+}
+#back-button.visible { opacity: 1; }
+
+body.attract-mode #background-layer {
+    filter: brightness(0.7) blur(2px);
+}
+body.attract-mode #jukebox-container {
+    transform: scale(1.1) rotate(-2deg);
 }

@@ -3,60 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REDLININ' Garage v1.4.0</title>
+  <title>REDLININ' Garage v1.5.0</title>
   <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+  <!-- Custom Cursor Element -->
+  <div id="custom-cursor"></div>
+
   <!-- Background and Parallax Container -->
   <div id="scene">
-    <!-- Dust overlay video -->
     <div id="video-overlay-container">
       <video id="overlay-video" autoplay loop muted playsinline>
         <source src="dust_overlay_v2.mp4" type="video/mp4" />
       </video>
     </div>
-
-    <!-- The main background image for parallax -->
     <div id="background-layer"></div>
-
-    <!-- Hover car with engine glow -->
     <div id="hover-car-container">
       <img id="hoverCar" class="hover-car" src="hover_ship_cutout.png" alt="Hover Ship" />
+      <div class="thruster-glow"></div>
       <div id="engine-glow"></div>
     </div>
   </div>
 
-
   <!-- UI Layer -->
   <div id="ui-layer">
-    <!-- PRESS START overlay -->
     <div id="press-start">[ PRESS START ]</div>
 
-    <!-- Menu with Selector -->
-    <div id="menu">
-        <div id="menu-selector">&gt;</div>
-        <div class="menu-item" data-action="adventure">ADVENTURE</div>
-        <div class="menu-item" data-action="exhibition">EXHIBITION</div>
-        <div class="menu-item disabled" data-action="customize">CUSTOMIZE</div>
-        <div class="menu-item" data-action="options">OPTIONS</div>
-        <div class="menu-item" data-action="profile">PROFILE</div>
-        <div class="menu-item" data-action="secrets">SECRETS SHOP</div>
+    <div id="menu-container">
+      <div id="menu">
+          <div id="menu-selector">&gt;</div>
+          <div class="menu-item" data-action="adventure">ADVENTURE</div>
+          <div class="menu-item" data-action="exhibition">EXHIBITION</div>
+          <div class="menu-item disabled" data-action="customize">CUSTOMIZE</div>
+          <div class="menu-item" data-action="options">OPTIONS</div>
+          <div class="menu-item" data-action="profile">PROFILE</div>
+          <div class="menu-item" data-action="secrets">SECRETS SHOP</div>
+      </div>
     </div>
-
-    <!-- MP3 skin + visualizer -->
-    <div id="jukebox-skin">
-      <img src="mp3_player_skin.png" alt="MP3 Player Skin">
+    
+    <div id="jukebox-container">
+      <img src="mp3_player_skin.png" alt="MP3 Player Skin" class="jukebox-bg">
       <canvas id="visualizer"></canvas>
+      <div id="rpm-meter">
+        <div id="rpm-needle"></div>
+      </div>
       <div id="track-display">
         <p id="track-name">NO SIGNAL</p>
       </div>
+      <div id="jukebox-controls">
+        <div id="prev-track" class="control-button">«</div>
+        <div id="play-pause" class="control-button" data-state="paused">►</div>
+        <div id="next-track" class="control-button">»</div>
+      </div>
+      <div id="volume-container">
+        <span id="volume-icon">🔊</span>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.8">
+      </div>
     </div>
 
-    <!-- Loading/Message Screen -->
     <div id="message-screen" class="hidden">
         <p id="message-text">LOADING...</p>
+        <div id="back-button" class="hidden">BACK</div>
     </div>
   </div>
 
