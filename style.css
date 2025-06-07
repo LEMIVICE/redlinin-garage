@@ -1,75 +1,64 @@
-/* --- Basic Setup & Custom Cursor --- */
+/* --- Basic Setup --- */
 body { margin: 0; padding: 0; background-color: #000; font-family: 'Draco', sans-serif; overflow: hidden; color: white; cursor: none; }
-#custom-cursor { position: fixed; width: 25px; height: 25px; border: 2px solid cyan; border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: transform 0.1s ease-out, background-color 0.2s ease; box-shadow: 0 0 10px cyan, inset 0 0 10px cyan; opacity: 0; }
-#custom-cursor.visible { opacity: 1; }
-.hidden { display: none !important; }
-body.death-mode { animation: death-strobe 0.1s infinite; }
-@keyframes death-strobe { 0%, 100% { background-color: #000; } 50% { background-color: #500; } }
+/* ... other base styles ... */
 
-/* --- Boot Screen --- */
-#boot-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center; font-family: monospace; }
-#boot-text { font-size: 1.2rem; color: #0f0; text-shadow: 0 0 5px #0f0; white-space: pre; }
-
-/* --- Scene & Main Container --- */
-#main-container { opacity: 0; transition: opacity 1s ease-in; pointer-events: none; }
-#main-container.visible { opacity: 1; pointer-events: auto; }
-#scene { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
-#video-overlay-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; mix-blend-mode: screen; opacity: 0.4; }
-#overlay-video { width: 100%; height: 100%; object-fit: cover; }
-#background-layer { position: absolute; top: -5%; left: -5%; width: 110%; height: 110%; background: url('garage_bg.png') no-repeat center center; background-size: cover; }
-#hangar-container { position: absolute; width: 100%; height: 100%; }
-#hover-car-bay { position: absolute; width: 45%; bottom: 8%; left: 50%; z-index: 3; animation: float 4s ease-in-out infinite; }
-.hover-car { width: 100%; position: absolute; top: 0; left: 0; transition: opacity 0.5s ease-in-out; opacity: 0; }
-.hover-car.active { opacity: 1; }
-@keyframes float { 
-  0%, 100% { transform: translate(-50%, 0); } 
-  50% { transform: translate(-50%, -2%); } 
+/* --- Lockpick Mini-Game Styles --- */
+#lockpick-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.car-switcher { position: absolute; top: 50%; transform: translateY(-50%); font-size: 5rem; color: cyan; text-shadow: 0 0 10px cyan; cursor: none; z-index: 25; user-select: none; opacity: 0.3; transition: opacity 0.3s; }
-.car-switcher:hover { opacity: 1; }
-#car-switcher-left { left: 5%; }
-#car-switcher-right { right: 5%; }
-
-/* --- UI Layer Elements --- */
-#ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
-#ui-layer > * { pointer-events: auto; }
-#press-start { display: block !important; position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); font-size: 36px; color: cyan; text-shadow: 0 0 10px cyan, 0 0 20px cyan; animation: glow 1.5s ease-in-out infinite alternate; z-index: 999; pointer-events: none; opacity: 1; transition: opacity 0.5s ease-out; }
-@keyframes glow { from { opacity: 0.4; } to { opacity: 1; } }
-#moth-ai { position: fixed; width: 90px; z-index: 50; transition: all 12s linear; pointer-events: none; filter: drop-shadow(0 0 10px cyan); animation: flutter 0.4s ease-in-out infinite alternate; }
-@keyframes flutter { from { transform: translateY(-3px) rotate(-3deg); } to { transform: translateY(3px) rotate(3deg); } }
-#moth-ai.corrupted { filter: drop-shadow(0 0 10px red); }
-
-#digital-pet-zone { position: fixed; bottom: 20px; right: 20px; z-index: 50; display: flex; flex-direction: column; gap: 10px; }
-.pet-container { width: 240px; position: relative; }
-.pet-skin { width: 100%; height: auto; }
-.pet-canvas { position: absolute; top: 23.5%; left: 16.5%; width: 67%; height: 41.5%; image-rendering: pixelated; }
-#pet-container-2.corrupted .pet-canvas { animation: glitch 0.2s infinite; }
-@keyframes glitch { 0%, 100% { opacity: 1; } 50% { transform: translate(2px, -2px); opacity: 0.8; } }
-
-#menu-container { position: absolute; top: 15%; right: 0; width: 400px; transform: translateX(100%); transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
-#menu-container.visible { transform: translateX(0); }
-#menu { position: relative; text-align: right; padding-right: 50px; }
-.menu-item { font-size: 24px; padding: 8px 0; margin-bottom: 15px; color: cyan; text-shadow: 0 0 8px fuchsia; cursor: none; transition: all 0.2s ease-in-out; opacity: 0.7; }
-.menu-item.selected { color: yellow; transform: translateX(-20px); opacity: 1; text-shadow: 0 0 12px yellow; }
-#menu-selector { position: absolute; right: 20px; font-size: 24px; color: yellow; text-shadow: 0 0 12px yellow; transition: top 0.2s ease-in-out, opacity 0.2s; opacity: 0; }
-#jukebox-container { position: absolute; bottom: 40px; left: 20px; z-index: 20; width: 240px; height: 240px; }
-.jukebox-bg { position: absolute; top: 0; left: 0; width: 100%; pointer-events: none; }
-#visualizer { position: absolute; bottom: 84px; left: 24px; width: 192px; height: 40px; }
-#rpm-meter { position: absolute; top: 68px; left: 95px; width: 50px; height: 25px; overflow: hidden; }
-#rpm-needle { width: 100%; height: 200%; background-color: red; border: 1px solid #ffaaaa; transform-origin: 50% 100%; transition: transform 0.1s ease-out; transform: rotate(-45deg); }
-#track-display { position: absolute; top: 44px; left: 24px; width: 192px; height: 20px; line-height: 20px; text-align: center; color: lime; font-family: monospace; font-size: 12px; text-shadow: 0 0 5px lime; overflow: hidden; }
-#track-name { margin: 0; white-space: nowrap; }
-#jukebox-controls { position: absolute; bottom: 44px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 20px; left: 0; }
-.control-button { font-size: 20px; color: cyan; cursor: none; text-shadow: 0 0 8px cyan; transition: all 0.2s; user-select: none; }
-#volume-container { position: absolute; bottom: 18px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 5px; opacity: 0; transition: opacity 0.3s; left: 0; }
-#jukebox-container:hover #volume-container { opacity: 1; }
-#system-scroller { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.5); white-space: nowrap; overflow: hidden; font-family: monospace; font-size: 12px; color: #0f0; z-index: 15;}
-#system-scroller p { display: inline-block; padding-left: 100%; animation: marquee 30s linear infinite; }
-@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-
-/* --- Terminal Screen --- */
-#terminal-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 500; display: flex; justify-content: center; align-items: center; }
-.terminal-content { width: 80%; max-width: 800px; height: 80%; background: #050505; border: 2px solid cyan; font-family: monospace; padding: 20px; display: flex; flex-direction: column; }
-#terminal-title { font-size: 24px; color: yellow; text-align: center; border-bottom: 1px solid cyan; padding-bottom: 10px; margin-bottom: 20px; }
-#terminal-body { flex-grow: 1; overflow-y: auto; color: #0f0; }
-.terminal-back-button { margin-top: 20px; padding: 10px; border: 1px solid yellow; text-align: center; color: yellow; cursor: none; }
+#lockpick-ui {
+    width: 350px;
+    background: rgba(10, 20, 30, 0.85);
+    border: 2px solid cyan;
+    box-shadow: 0 0 20px cyan, inset 0 0 20px rgba(0, 255, 255, 0.2);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    font-family: monospace;
+}
+#lockpick-canvas {
+    width: 250px;
+    height: 250px;
+    background-color: #050a0f;
+    border-radius: 50%;
+}
+#lockpick-keys {
+    display: flex;
+    gap: 10px;
+}
+.key-slot {
+    width: 60px;
+    height: 60px;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    cursor: none;
+    position: relative;
+}
+.key-slot.selected {
+    border-color: yellow;
+    box-shadow: 0 0 10px yellow;
+}
+.key-canvas {
+    width: 100%;
+    height: 100%;
+}
+#lockpick-message {
+    color: yellow;
+    text-shadow: 0 0 5px yellow;
+    min-height: 20px;
+}
+#lockpick-close {
+    background: none;
+    border: 1px solid red;
+    color: red;
+    padding: 5px 10px;
+    cursor: none;
+}
+/* ... (rest of the styles from 1.9.1) ... */
