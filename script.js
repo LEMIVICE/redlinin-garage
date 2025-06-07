@@ -1,4 +1,4 @@
-console.log('REDLININ Garage v1.9.3 - Full Interactive Build');
+console.log('REDLININ Garage v1.9.4 - Full Interactive Build');
 
 window.onload = () => {
     // --- App State ---
@@ -24,19 +24,19 @@ window.onload = () => {
         sparkingConduit: document.getElementById('sparking-conduit'),
         floorGrate: document.getElementById('floor-grate'),
         lowerLevelView: document.getElementById('lower-level-view'),
-        clickableTerminals: document.querySelectorAll('[data-target]')
+        clickableTerminals: document.querySelectorAll('[data-target]'),
+        terminalScreen: document.getElementById('terminal-screen'), terminalTitle: document.getElementById('terminal-title'),
+        terminalBody: document.getElementById('terminal-body'), terminalBackButton: document.querySelectorAll('.terminal-back-button'),
     };
 
     // --- Audio ---
-    let masterAudioCtx, musicAudio, ambientAudio, sfxHover, sfxSelect, sfxClick, sfxZap;
+    let masterAudioCtx, musicAudio, sfxHover, sfxSelect, sfxClick, sfxZap;
     function createAudioContext() { if (!masterAudioCtx) masterAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); return masterAudioCtx; }
     function createSound(type) {
         const audioCtx = createAudioContext();
         return () => {
-            if (!audioCtx) return;
-            let osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            if (!audioCtx) return; let osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination); gain.gain.setValueAtTime(0, audioCtx.currentTime);
             switch (type) {
                 case 'hover': osc.type = 'triangle'; osc.frequency.setValueAtTime(440, 0); gain.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 0.01); gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1); break;
                 case 'select': osc.type = 'sine'; osc.frequency.setValueAtTime(660, 0); gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.02); gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2); break;
@@ -49,7 +49,7 @@ window.onload = () => {
 
     // --- Modules ---
     const BootSequence = {
-        lines: [ "LEMIVICE BIOS v1.9.3", "...", "Memory Check: OK", "...", "Loading REDLININ' OS...", "..." ],
+        lines: [ "LEMIVICE BIOS v1.9.4", "...", "Memory Check: OK", "...", "Loading REDLININ' OS...", "..." ],
         run() {
             let i = 0;
             const interval = setInterval(() => {
@@ -94,153 +94,104 @@ window.onload = () => {
             elements.holographicStats.classList.add('visible');
         }
     };
+    
+    const DigitalPet = {
+        ctx1: elements.pet1Canvas.getContext('2d'), ctx2: elements.pet2Canvas.getContext('2d'),
+        isDemonicUnlocked: false, animationFrame: 0, animationTimer: null, currentAnimation: 'idle',
+        animations: { idle_1: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0],[0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,0],[0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,1,0],[0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,1,0],[0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0],[0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0],[0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]], idle_2: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0],[0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,0],[0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,1,0],[0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,1,0],[0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0],[0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]], idle_blink: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0],[0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]], happy: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,1,1,0,1,1,0,0,0,0,0,0,1,1,0,1,1,0,0],[0,0,1,1,0,1,1,0,0,0,0,0,0,1,1,0,1,1,0,0],[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],[0,1,1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0],[0,1,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,1,0],[0,1,1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
+        },
+        drawFrame(ctx, frameData, color) {
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            const pixelSizeX = ctx.canvas.width / frameData[0].length, pixelSizeY = ctx.canvas.height / frameData.length;
+            for(let y = 0; y < frameData.length; y++) { for(let x = 0; x < frameData[y].length; x++) { if (frameData[y][x] === 1) { ctx.fillStyle = color; ctx.fillRect(x * pixelSizeX, y * pixelSizeY, pixelSizeX, pixelSizeY); } } }
+        },
+        animate() {
+            clearInterval(this.animationTimer);
+            this.animationTimer = setInterval(() => {
+                this.animationFrame++; let frame = (this.animationFrame % 20 < 18) ? this.animations.idle_1 : this.animations.idle_blink;
+                if(this.animationFrame % 40 > 20 && this.animationFrame % 40 < 38) frame = this.animations.idle_2
+                this.drawFrame(this.ctx1, frame, '#00ff00');
+                if (this.isDemonicUnlocked) { let demonicFrame = (Math.random() < 0.8) ? frame : this.animations.happy; this.drawFrame(this.ctx2, demonicFrame, '#ff0000'); }
+            }, 150);
+        },
+        react() { clearInterval(this.animationTimer); this.drawFrame(this.ctx1, this.animations.happy, '#00ff00'); if(this.isDemonicUnlocked) this.drawFrame(this.ctx2, this.animations.happy, '#ff0000'); setTimeout(() => this.animate(), 1000); },
+        unlockDemonic() { if (this.isDemonicUnlocked) return; this.isDemonicUnlocked = true; elements.petContainer2.classList.remove('hidden'); elements.mothAI.classList.add('corrupted'); elements.petContainer2.classList.add('corrupted'); this.drawFrame(this.ctx2, this.animations.idle_1, '#ff0000'); }
+    };
 
-    const LockpickGame = {
-        ctx: elements.lockpickCanvas.getContext('2d'),
-        isActive: false, rings: [], keys: [], currentRingIndex: 0, selectedKeyIndex: 0, playerRotation: 0,
-        generateProblem(difficulty) {
-            this.rings = []; this.keys = []; this.currentRingIndex = 0;
-            const numRings = difficulty, totalSlots = 16;
-            let usedSlots = new Set();
-            for (let i = 0; i < numRings; i++) {
-                let solutionKey = new Set();
-                let numGaps = 2 + i;
-                while(solutionKey.size < numGaps) {
-                    let gap = Math.floor(Math.random() * totalSlots);
-                    if (!usedSlots.has(gap)) { solutionKey.add(gap); usedSlots.add(gap); }
-                }
-                this.rings.push({ solved: false, gaps: solutionKey });
-                this.keys.push({ used: false, pins: solutionKey });
+    const Jukebox = {
+        tracks: [ "track_01.mp3", "track_02.mp3", "track_03.mp3", "track_04.mp3", "track_05.mp3" ], currentTrackIndex: 0,
+        setup() {
+            for (let i = this.tracks.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [this.tracks[i], this.tracks[j]] = [this.tracks[j], this.tracks[i]]; }
+            const audioCtx = createAudioContext(); musicAudio = new Audio(); musicAudio.loop = false; musicAudio.volume = elements.volumeSlider.value; musicAudio.crossOrigin = "anonymous";
+            const source = audioCtx.createMediaElementSource(musicAudio); const analyser = audioCtx.createAnalyser(); analyser.fftSize = 256; source.connect(analyser); analyser.connect(audioCtx.destination);
+            const bufferLength = analyser.frequencyBinCount, dataArray = new Uint8Array(bufferLength); const canvas = document.getElementById("visualizer"), ctx = canvas.getContext("2d");
+            const bars = [ { x: 3, width: 10 }, { x: 15, width: 10 }, { x: 27, width: 10 }, { x: 39, width: 10 }, { x: 51, width: 10 }, { x: 63, width: 10 }, { x: 75, width: 10 }, { x: 87, width: 10 }, { x: 99, width: 10 }, { x: 111, width: 10 }, { x: 123, width: 10 }, { x: 135, width: 10 }, { x: 147, width: 10 }, { x: 159, width: 10 }, { x: 171, width: 10 } ];
+            function draw() {
+                requestAnimationFrame(draw); analyser.getByteFrequencyData(dataArray); ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const bassAvg = (dataArray[1] + dataArray[2] + dataArray[3]) / 3, midAvg = (dataArray[20] + dataArray[21] + dataArray[22]) / 3;
+                bars.forEach((bar, i) => {
+                    const sliceStart = Math.floor(i * (bufferLength / bars.length)), sliceEnd = Math.floor((i + 1) * (bufferLength / bars.length));
+                    let sliceAvg = 0; for(let k = sliceStart; k < sliceEnd; k++) { sliceAvg += dataArray[k]; }
+                    sliceAvg /= (sliceEnd - sliceStart) || 1;
+                    ctx.fillStyle = '#00ff00'; ctx.fillRect(bar.x, canvas.height - (sliceAvg / 255) * canvas.height * 1.2, bar.width, (sliceAvg / 255) * canvas.height * 1.2);
+                });
+                elements.rpmNeedle.style.transform = `rotate(${Math.min(45, Math.max(-45, -45 + ((bassAvg + midAvg) / 2) / 180 * 90))}deg)`;
             }
-            for(let i=0; i<3; i++) {
-                let falseKey = new Set();
-                 while(falseKey.size < 3) { falseKey.add(Math.floor(Math.random() * totalSlots)); }
-                 this.keys.push({ used: false, pins: falseKey });
-            }
-            this.keys.sort(() => Math.random() - 0.5);
-            this.playerRotation = 0;
+            draw();
         },
-        start() { this.isActive = true; this.generateProblem(2); elements.lockpickContainer.classList.remove('hidden'); this.renderKeys(); this.draw(); elements.lockpickMessage.textContent = "Align key and press [SPACE]"; },
-        stop() { this.isActive = false; elements.lockpickContainer.classList.add('hidden'); },
-        renderKeys() {
-            elements.lockpickKeysContainer.innerHTML = '';
-            this.keys.forEach((key, index) => {
-                const slot = document.createElement('div');
-                slot.className = 'key-slot';
-                if(index === this.selectedKeyIndex) slot.classList.add('selected');
-                if(key.used) slot.style.opacity = '0.2';
-                const canvas = document.createElement('canvas');
-                canvas.className = 'key-canvas'; canvas.width = 60; canvas.height = 60;
-                slot.appendChild(canvas);
-                this.drawKey(canvas.getContext('2d'), key, 1);
-                slot.addEventListener('click', () => { if(!key.used) { this.selectedKeyIndex = index; this.renderKeys(); this.draw(); } });
-                elements.lockpickKeysContainer.appendChild(slot);
-            });
+        playTrack(direction) {
+            if (direction === 'next') this.currentTrackIndex++; else if (direction === 'prev') this.currentTrackIndex--;
+            if (this.currentTrackIndex >= this.tracks.length) this.currentTrackIndex = 0; if (this.currentTrackIndex < 0) this.currentTrackIndex = this.tracks.length - 1;
+            musicAudio.src = this.tracks[this.currentTrackIndex]; this.updateTrackDisplay();
+            musicAudio.play().then(() => { elements.playPauseBtn.textContent = '||'; elements.playPauseBtn.dataset.state = 'playing'; }).catch(e => { console.error("Audio playback failed:", e);});
         },
-        drawKey(ctx, key, scale) {
-            const radius = 28 * scale, centerX = 30 * scale, centerY = 30 * scale;
-            ctx.clearRect(0, 0, 60, 60); ctx.strokeStyle = 'lime'; ctx.lineWidth = 2 * scale;
-            ctx.beginPath(); ctx.arc(centerX, centerY, radius, 0, Math.PI * 2); ctx.stroke();
-            key.pins.forEach(pinIndex => {
-                const angle = (pinIndex / 16) * Math.PI * 2;
-                const x1 = centerX + Math.cos(angle) * (radius - 5 * scale), y1 = centerY + Math.sin(angle) * (radius - 5 * scale);
-                const x2 = centerX + Math.cos(angle) * (radius + 5 * scale), y2 = centerY + Math.sin(angle) * (radius + 5 * scale);
-                ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
-            });
-        },
-        draw() {
-            if(!this.isActive) return;
-            const r = this.ctx.canvas.width / 2; this.ctx.clearRect(0, 0, r*2, r*2);
-            this.rings.forEach((ring, index) => {
-                const radius = r - 20 - (index * 25);
-                if(radius < 10) return;
-                this.ctx.strokeStyle = ring.solved ? 'yellow' : (index === this.currentRingIndex ? 'cyan' : '#005555');
-                this.ctx.lineWidth = 5; this.ctx.beginPath();
-                for(let i = 0; i < 16; i++) {
-                    if(!ring.gaps.has(i)) {
-                       const angle = (i / 16) * Math.PI * 2 - (Math.PI / 16);
-                       this.ctx.arc(r, r, radius, angle, angle + (Math.PI/8));
-                    }
-                }
-                this.ctx.stroke();
-            });
-            const selectedKey = this.keys[this.selectedKeyIndex], currentRing = this.rings[this.currentRingIndex];
-            if(!selectedKey || !currentRing) return;
-            const keyRadius = r - 20 - (this.currentRingIndex * 25);
-            this.ctx.save(); this.ctx.translate(r,r); this.ctx.rotate(this.playerRotation * Math.PI / 180); this.ctx.translate(-r,-r);
-            this.ctx.lineWidth = 3;
-            selectedKey.pins.forEach(pinIndex => {
-                 const angle = (pinIndex / 16) * Math.PI * 2;
-                 this.ctx.strokeStyle = currentRing.gaps.has(pinIndex) ? 'lime' : 'red';
-                 const x1 = r + Math.cos(angle) * (keyRadius - 8), y1 = r + Math.sin(angle) * (keyRadius - 8);
-                 const x2 = r + Math.cos(angle) * (keyRadius + 8), y2 = r + Math.sin(angle) * (keyRadius + 8);
-                 this.ctx.beginPath(); this.ctx.moveTo(x1, y1); this.ctx.lineTo(x2, y2); this.ctx.stroke();
-            });
-            this.ctx.restore();
-        },
-        attemptSlot() {
-            const key = this.keys[this.selectedKeyIndex], ring = this.rings[this.currentRingIndex];
-            const rotationOffset = Math.round((this.playerRotation / 22.5) % 16 + 16) % 16;
-            let success = true;
-            if(key.pins.size !== ring.gaps.size) { success = false; } 
-            else { key.pins.forEach(pinIndex => { if(!ring.gaps.has((pinIndex + rotationOffset) % 16)) { success = false; } }); }
-            if(success) {
-                sfxSelect(); ring.solved = true; key.used = true;
-                this.currentRingIndex++; elements.lockpickMessage.textContent = `RING ${this.currentRingIndex} SOLVED`;
-                if(this.currentRingIndex >= this.rings.length) {
-                    elements.lockpickMessage.textContent = "BREACH SUCCESSFUL!"; setTimeout(() => this.stop(), 2000);
-                }
-                this.renderKeys(); this.draw();
-            } else {
-                elements.lockpickMessage.textContent = "KEY MISMATCH. TRY AGAIN.";
-                this.ctx.fillStyle = 'rgba(255, 0, 0, 0.3)'; this.ctx.fillRect(0,0,this.ctx.canvas.width, this.ctx.canvas.height);
-            }
-        },
-        handleInput(e) {
-            if(!this.isActive) return;
-            switch(e.key) {
-                case 'a': this.playerRotation -= 22.5; break; case 'd': this.playerRotation += 22.5; break;
-                case 'w': this.selectedKeyIndex = (this.selectedKeyIndex - 1 + this.keys.length) % this.keys.length; if(this.keys[this.selectedKeyIndex].used) this.handleInput({key: 'w'}); this.renderKeys(); break;
-                case 's': this.selectedKeyIndex = (this.selectedKeyIndex + 1) % this.keys.length; if(this.keys[this.selectedKeyIndex].used) this.handleInput({key: 's'}); this.renderKeys(); break;
-                case ' ': this.attemptSlot(); break;
-            }
-            this.draw();
-        }
+        updateTrackDisplay() { elements.trackNameEl.textContent = this.tracks[this.currentTrackIndex].replace('.mp3', ''); }
     };
     
-    // --- Main Activation ---
+    const DeathMode = {
+        sequence: ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'], userInput: [],
+        check(key) { if (!AppState.menuActive) return; this.userInput.push(key); if (this.userInput.length > this.sequence.length) this.userInput.shift(); if (this.userInput.join('') === this.sequence.join('')) { document.body.classList.add('death-mode'); DigitalPet.unlockDemonic(); setTimeout(() => document.body.classList.remove('death-mode'), 2000); } }
+    };
+
+    const MothAI = {
+        move() { const targets = [elements.menuContainer, elements.jukeboxContainer]; const target = targets[Math.floor(Math.random() * targets.length)]; const rect = target.getBoundingClientRect(); elements.mothAI.style.top = `${rect.top + (rect.height / 2)}px`; elements.mothAI.style.left = `${rect.left + (rect.width / 2) - (elements.mothAI.width / 2)}px`; }
+    };
+    
     function activateStart() {
         if (AppState.menuActive) return; AppState.menuActive = true;
         sfxHover = createSound('hover'); sfxSelect = createSound('select'); sfxClick = createSound('click'); sfxZap = createSound('zap');
-        // Jukebox.setup(); Jukebox.playTrack();
-        // DigitalPet.animate();
+        Jukebox.setup(); Jukebox.playTrack();
+        DigitalPet.animate();
         elements.pressStart.style.opacity = '0';
         setTimeout(() => elements.pressStart.classList.add('hidden'), 500);
         elements.menuContainer.classList.add('visible');
-        elements.switcherLeft.classList.remove('hidden');
-        elements.switcherRight.classList.remove('hidden');
+        elements.switcherLeft.classList.remove('hidden'); elements.switcherRight.classList.remove('hidden');
         Hangar.updateStats();
         addInteractiveListeners();
-        // setInterval(MothAI.move, 8000); MothAI.move();
+        setInterval(MothAI.move, 8000); MothAI.move();
     }
 
     function addInteractiveListeners() {
-        elements.toolbox.addEventListener('click', () => LockpickGame.start());
-        elements.lockpickCloseBtn.addEventListener('click', () => LockpickGame.stop());
-        document.addEventListener('keydown', (e) => LockpickGame.handleInput(e));
+        document.addEventListener('mousemove', (e) => { elements.customCursor.style.left = `${e.clientX}px`; elements.customCursor.style.top = `${e.clientY}px`; });
+        document.addEventListener('keydown', (e) => DeathMode.check(e.key));
         elements.switcherLeft.addEventListener('click', (e) => { e.stopPropagation(); sfxClick(); Hangar.switchCar('left'); });
         elements.switcherRight.addEventListener('click', (e) => { e.stopPropagation(); sfxClick(); Hangar.switchCar('right'); });
-        elements.sparkingConduit.addEventListener('click', () => {
-            sfxZap();
-            document.body.classList.add('flicker');
-            setTimeout(() => document.body.classList.remove('flicker'), 600);
+        elements.menuItems.forEach((item, index) => {
+             item.addEventListener('mouseenter', () => { AppState.selectedIndex = index; updateMenuSelection(); sfxHover(); });
+             item.addEventListener('click', () => { sfxSelect(); alert('Menu Clicked: ' + item.dataset.action); });
         });
-        elements.floorGrate.addEventListener('click', () => {
-            elements.lowerLevelView.classList.remove('hidden');
-            setTimeout(() => elements.lowerLevelView.classList.add('hidden'), 2000);
-        });
+        elements.playPauseBtn.addEventListener('click', (e) => { e.stopPropagation(); sfxClick(); if (elements.playPauseBtn.dataset.state === 'playing') { musicAudio.pause(); elements.playPauseBtn.textContent = '►'; elements.playPauseBtn.dataset.state = 'paused'; } else { musicAudio.play(); elements.playPauseBtn.textContent = '||'; elements.playPauseBtn.dataset.state = 'playing'; } });
+        elements.nextBtn.addEventListener('click', (e) => { e.stopPropagation(); sfxClick(); Jukebox.playTrack('next'); DigitalPet.react(); });
+        elements.prevBtn.addEventListener('click', (e) => { e.stopPropagation(); sfxClick(); Jukebox.playTrack('prev'); DigitalPet.react(); });
+        musicAudio.addEventListener('ended', () => Jukebox.playTrack('next'));
+        elements.volumeSlider.addEventListener('input', (e) => musicAudio.volume = e.target.value);
+    }
+    
+    function updateMenuSelection() {
+        elements.menuItems.forEach((item, index) => { item.classList.toggle('selected', index === AppState.selectedIndex); });
+        const selectedItem = elements.menuItems[AppState.selectedIndex];
+        if (selectedItem) { elements.menuSelector.style.opacity = '1'; elements.menuSelector.style.top = `${selectedItem.offsetTop}px`; }
     }
 
-    // --- Initial Entry Point ---
     BootSequence.run();
 };
