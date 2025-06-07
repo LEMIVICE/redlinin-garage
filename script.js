@@ -80,11 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const DigitalPet = {
         ctx1: pet1Canvas.getContext('2d'), ctx2: pet2Canvas.getContext('2d'),
         isDemonicUnlocked: false, animationFrame: 0, animationTimer: null, currentAnimation: 'idle',
-        // Higher definition 20x20 grid
         animations: {
             idle_1: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0],[0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,0],[0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,1,0],[0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,1,0],[0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0],[0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0],[0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
             idle_2: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0],[0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,0],[0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,1,0],[0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,1,0],[0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0],[0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
             idle_blink: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0],[0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
+            happy: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,1,1,0,1,1,0,0,0,0,0,0,1,1,0,1,1,0,0],[0,0,1,1,0,1,1,0,0,0,0,0,0,1,1,0,1,1,0,0],[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],[0,1,1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0],[0,1,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,1,0],[0,1,1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
         },
         drawFrame(ctx, frameData, color) {
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -104,10 +104,10 @@ document.addEventListener('DOMContentLoaded', () => {
             this.animationTimer = setInterval(() => {
                 this.animationFrame++;
                 let frame = (this.animationFrame % 20 < 18) ? this.animations.idle_1 : this.animations.idle_blink;
-                if(this.animationFrame % 40 < 38 && this.animationFrame % 20 >= 18) frame = this.animations.idle_2
+                if(this.animationFrame % 40 > 20 && this.animationFrame % 40 < 38) frame = this.animations.idle_2
                 this.drawFrame(this.ctx1, frame, '#00ff00');
                 if (this.isDemonicUnlocked) {
-                    let demonicFrame = (Math.random() < 0.8) ? frame : this.animations.idle_blink;
+                    let demonicFrame = (Math.random() < 0.8) ? frame : this.animations.happy;
                     this.drawFrame(this.ctx2, demonicFrame, '#ff0000');
                 }
             }, 150);
@@ -123,18 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
             this.isDemonicUnlocked = true;
             petContainer2.classList.remove('hidden'); mothAI.classList.add('corrupted'); petContainer2.classList.add('corrupted');
             this.drawFrame(this.ctx2, this.animations.idle_1, '#ff0000');
-        }
-    };
-
-    const DeathMode = {
-        sequence: ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'], userInput: [],
-        check(key) {
-            if (!AppState.menuActive) return; this.userInput.push(key);
-            if (this.userInput.length > this.sequence.length) this.userInput.shift();
-            if (this.userInput.join('') === this.sequence.join('')) {
-                document.body.classList.add('death-mode'); DigitalPet.unlockDemonic();
-                setTimeout(() => document.body.classList.remove('death-mode'), 2000);
-            }
         }
     };
 
@@ -173,21 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTrackDisplay() { trackNameEl.textContent = this.tracks[this.currentTrackIndex].replace('.mp3', ''); }
     };
     
-    function createAudioContext() { if (!masterAudioCtx) masterAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); return masterAudioCtx; }
-    function createSound(type) {
-        const audioCtx = createAudioContext();
-        return () => {
-            if (!audioCtx) return; let osc = audioCtx.createOscillator(); let gain = audioCtx.createGain();
-            osc.connect(gain); gain.connect(audioCtx.destination); gain.gain.setValueAtTime(0, audioCtx.currentTime);
-            switch (type) {
-                case 'hover': osc.type = 'triangle'; osc.frequency.setValueAtTime(440, 0); gain.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 0.01); gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1); break;
-                case 'select': osc.type = 'sine'; osc.frequency.setValueAtTime(660, 0); gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.02); gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2); break;
-                case 'click': osc.type = 'sine'; osc.frequency.setValueAtTime(1000, 0); gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.01); gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.05); break;
-            }
-            osc.start(audioCtx.currentTime); osc.stop(audioCtx.currentTime + 0.3);
-        };
-    }
-
     const MothAI = {
         move() {
             const targets = [menuContainer, jukeboxContainer]; const target = targets[Math.floor(Math.random() * targets.length)];
@@ -219,8 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
              item.addEventListener('click', () => { sfxSelect(); alert('Menu Clicked: ' + item.dataset.action); });
         });
         playPauseBtn.addEventListener('click', (e) => { e.stopPropagation(); sfxClick(); if (playPauseBtn.dataset.state === 'playing') { musicAudio.pause(); playPauseBtn.textContent = '►'; playPauseBtn.dataset.state = 'paused'; } else { musicAudio.play(); playPauseBtn.textContent = '||'; playPauseBtn.dataset.state = 'playing'; } });
-        nextBtn.addEventListener('click', (e) => { e.stopPropagation(); sfxClick(); Jukebox.playTrack('next'); DigitalPet.react('happy'); });
-        prevBtn.addEventListener('click', (e) => { e.stopPropagation(); sfxClick(); Jukebox.playTrack('prev'); DigitalPet.react('happy'); });
+        nextBtn.addEventListener('click', (e) => { e.stopPropagation(); sfxClick(); Jukebox.playTrack('next'); DigitalPet.react(); });
+        prevBtn.addEventListener('click', (e) => { e.stopPropagation(); sfxClick(); Jukebox.playTrack('prev'); DigitalPet.react(); });
         musicAudio.addEventListener('ended', () => Jukebox.playTrack('next'));
         volumeSlider.addEventListener('input', (e) => musicAudio.volume = e.target.value);
     }
