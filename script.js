@@ -1,8 +1,10 @@
 console.log('REDLININ Garage v1.9.0 - BIOS BOOT');
 
 document.addEventListener('DOMContentLoaded', () => {
+    // --- App State ---
     const AppState = { menuActive: false, currentCarIndex: 0, selectedIndex: 0 };
 
+    // --- DOM Element Cache ---
     const bootScreen = document.getElementById('boot-screen'), bootText = document.getElementById('boot-text');
     const mainContainer = document.getElementById('main-container'), customCursor = document.getElementById("custom-cursor");
     const menuContainer = document.getElementById("menu-container"), menuItems = document.querySelectorAll(".menu-item"), menuSelector = document.getElementById("menu-selector");
@@ -13,8 +15,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const volumeSlider = document.getElementById("volume-slider"), trackNameEl = document.getElementById("track-name"), rpmNeedle = document.getElementById("rpm-needle");
     const pressStart = document.getElementById('press-start');
 
+    // --- Audio ---
     let masterAudioCtx, musicAudio, sfxHover, sfxSelect, sfxClick;
 
+    function createAudioContext() {
+        if (!masterAudioCtx) masterAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        return masterAudioCtx;
+    }
+
+    function createSound(type) {
+        const audioCtx = createAudioContext();
+        return () => {
+            if (!audioCtx) return;
+            let osc = audioCtx.createOscillator(); let gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            switch (type) {
+                case 'hover': osc.type = 'triangle'; osc.frequency.setValueAtTime(440, 0); gain.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 0.01); gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1); break;
+                case 'select': osc.type = 'sine'; osc.frequency.setValueAtTime(660, 0); gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.02); gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2); break;
+                case 'click': osc.type = 'sine'; osc.frequency.setValueAtTime(1000, 0); gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.01); gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.05); break;
+            }
+            osc.start(audioCtx.currentTime); osc.stop(audioCtx.currentTime + 0.3);
+        };
+    }
+
+    // --- Modules ---
     const BootSequence = {
         lines: [ "LEMIVICE BIOS v1.9.0", "...", "Memory Check: 640 KB OK", "...", "Initializing TurboCore...", "OK", "Loading REDLININ' OS...", "...", "Executing LEMIVICE.EXE", "..." ],
         run() {
@@ -25,8 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     clearInterval(interval);
                     setTimeout(() => {
-                        bootScreen.style.transition = 'opacity 1s';
-                        bootScreen.style.opacity = '0';
+                        bootScreen.style.transition = 'opacity 1s'; bootScreen.style.opacity = '0';
                         setTimeout(() => {
                             bootScreen.classList.add('hidden');
                             mainContainer.classList.remove('hidden');
@@ -55,19 +79,22 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const DigitalPet = {
         ctx1: pet1Canvas.getContext('2d'), ctx2: pet2Canvas.getContext('2d'),
-        isDemonicUnlocked: false, animationFrame: 0, animationTimer: null,
+        isDemonicUnlocked: false, animationFrame: 0, animationTimer: null, currentAnimation: 'idle',
+        // Higher definition 20x20 grid
         animations: {
-            idle: [ [0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,1,1,0,0,0,0,0,1,1,0,0], [0,0,1,1,0,0,0,0,0,1,1,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,1,1,1,1,1,0,0,0,0], [0,0,0,1,0,0,0,0,0,1,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0] ],
-            idleBlink: [ [0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,1,1,1,0,0,0,1,1,1,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,1,1,1,1,1,0,0,0,0], [0,0,0,1,0,0,0,0,0,1,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0] ],
-            happy: [ [0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,1,1,0,0,0,0,0,1,1,0,0], [0,0,1,1,0,0,0,0,0,1,1,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0], [0,1,0,0,0,0,0,0,0,0,0,1,0], [0,0,1,0,0,0,0,0,0,0,1,0,0], [0,0,0,1,1,1,1,1,1,1,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0] ]
+            idle_1: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0],[0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,0],[0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,1,0],[0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,1,0],[0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0],[0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0],[0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
+            idle_2: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0],[0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,0],[0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,1,0],[0,1,1,0,1,1,0,0,0,0,0,0,0,1,1,0,1,1,1,0],[0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0],[0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
+            idle_blink: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],[0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0],[0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
         },
-        drawFrame(ctx, frame, color) {
+        drawFrame(ctx, frameData, color) {
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-            for(let y = 0; y < frame.length; y++) {
-                for(let x = 0; x < frame[y].length; x++) {
-                    if (frame[y][x] === 1) {
+            const pixelSizeX = ctx.canvas.width / frameData[0].length;
+            const pixelSizeY = ctx.canvas.height / frameData.length;
+            for(let y = 0; y < frameData.length; y++) {
+                for(let x = 0; x < frameData[y].length; x++) {
+                    if (frameData[y][x] === 1) {
                         ctx.fillStyle = color;
-                        ctx.fillRect(x * (ctx.canvas.width / 13), y * (ctx.canvas.height / 10), (ctx.canvas.width / 13), (ctx.canvas.height / 10));
+                        ctx.fillRect(x * pixelSizeX, y * pixelSizeY, pixelSizeX, pixelSizeY);
                     }
                 }
             }
@@ -76,66 +103,59 @@ document.addEventListener('DOMContentLoaded', () => {
             clearInterval(this.animationTimer);
             this.animationTimer = setInterval(() => {
                 this.animationFrame++;
-                // Idle animation with blinks
-                let currentFrame = (this.animationFrame % 20 < 18) ? this.animations.idle : this.animations.idleBlink;
-                this.drawFrame(this.ctx1, currentFrame, '#00ff00');
+                let frame = (this.animationFrame % 20 < 18) ? this.animations.idle_1 : this.animations.idle_blink;
+                if(this.animationFrame % 40 < 38 && this.animationFrame % 20 >= 18) frame = this.animations.idle_2
+                this.drawFrame(this.ctx1, frame, '#00ff00');
                 if (this.isDemonicUnlocked) {
-                    let demonicFrame = currentFrame;
-                    // Add glitch effect for demonic pet
-                    if(Math.random() < 0.2) {
-                        demonicFrame = this.animations.happy; // Just as an example of a "glitch"
-                    }
+                    let demonicFrame = (Math.random() < 0.8) ? frame : this.animations.idle_blink;
                     this.drawFrame(this.ctx2, demonicFrame, '#ff0000');
                 }
-            }, 200);
+            }, 150);
         },
-        react(mood) { /* Placeholder for more complex reactions */ },
+        react() {
+            clearInterval(this.animationTimer);
+            this.drawFrame(this.ctx1, this.animations.happy, '#00ff00');
+            if(this.isDemonicUnlocked) this.drawFrame(this.ctx2, this.animations.happy, '#ff0000');
+            setTimeout(() => this.animate(), 1000);
+        },
         unlockDemonic() {
             if (this.isDemonicUnlocked) return;
             this.isDemonicUnlocked = true;
-            petContainer2.classList.remove('hidden');
-            mothAI.classList.add('corrupted');
-            petContainer2.classList.add('corrupted');
+            petContainer2.classList.remove('hidden'); mothAI.classList.add('corrupted'); petContainer2.classList.add('corrupted');
+            this.drawFrame(this.ctx2, this.animations.idle_1, '#ff0000');
         }
     };
 
     const DeathMode = {
-        sequence: ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'],
-        userInput: [],
+        sequence: ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'], userInput: [],
         check(key) {
-            if (!AppState.menuActive) return;
-            this.userInput.push(key);
+            if (!AppState.menuActive) return; this.userInput.push(key);
             if (this.userInput.length > this.sequence.length) this.userInput.shift();
             if (this.userInput.join('') === this.sequence.join('')) {
-                document.body.classList.add('death-mode');
-                DigitalPet.unlockDemonic();
+                document.body.classList.add('death-mode'); DigitalPet.unlockDemonic();
                 setTimeout(() => document.body.classList.remove('death-mode'), 2000);
             }
         }
     };
 
     const Jukebox = {
-        tracks: [ "track_01.mp3", "track_02.mp3", "track_03.mp3", "track_04.mp3", "track_05.mp3" ],
-        currentTrackIndex: 0,
+        tracks: [ "track_01.mp3", "track_02.mp3", "track_03.mp3", "track_04.mp3", "track_05.mp3" ], currentTrackIndex: 0,
         setup() {
             for (let i = this.tracks.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [this.tracks[i], this.tracks[j]] = [this.tracks[j], this.tracks[i]]; }
             const audioCtx = createAudioContext();
             musicAudio = new Audio(); musicAudio.loop = false; musicAudio.volume = volumeSlider.value; musicAudio.crossOrigin = "anonymous";
-            const source = audioCtx.createMediaElementSource(musicAudio);
-            const analyser = audioCtx.createAnalyser(); analyser.fftSize = 256;
-            source.connect(analyser); analyser.connect(audioCtx.destination);
+            const source = audioCtx.createMediaElementSource(musicAudio); const analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 256; source.connect(analyser); analyser.connect(audioCtx.destination);
             const bufferLength = analyser.frequencyBinCount, dataArray = new Uint8Array(bufferLength);
             const canvas = document.getElementById("visualizer"), ctx = canvas.getContext("2d");
             const bars = [ { x: 3, width: 10 }, { x: 15, width: 10 }, { x: 27, width: 10 }, { x: 39, width: 10 }, { x: 51, width: 10 }, { x: 63, width: 10 }, { x: 75, width: 10 }, { x: 87, width: 10 }, { x: 99, width: 10 }, { x: 111, width: 10 }, { x: 123, width: 10 }, { x: 135, width: 10 }, { x: 147, width: 10 }, { x: 159, width: 10 }, { x: 171, width: 10 } ];
             function draw() {
-                requestAnimationFrame(draw);
-                analyser.getByteFrequencyData(dataArray);
+                requestAnimationFrame(draw); analyser.getByteFrequencyData(dataArray);
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 const bassAvg = (dataArray[1] + dataArray[2] + dataArray[3]) / 3, midAvg = (dataArray[20] + dataArray[21] + dataArray[22]) / 3;
                 bars.forEach((bar, i) => {
                     const sliceStart = Math.floor(i * (bufferLength / bars.length)), sliceEnd = Math.floor((i + 1) * (bufferLength / bars.length));
-                    let sliceAvg = 0;
-                    for(let k = sliceStart; k < sliceEnd; k++) { sliceAvg += dataArray[k]; }
+                    let sliceAvg = 0; for(let k = sliceStart; k < sliceEnd; k++) { sliceAvg += dataArray[k]; }
                     sliceAvg /= (sliceEnd - sliceStart) || 1;
                     ctx.fillStyle = '#00ff00';
                     ctx.fillRect(bar.x, canvas.height - (sliceAvg / 255) * canvas.height * 1.2, bar.width, (sliceAvg / 255) * canvas.height * 1.2);
@@ -148,27 +168,36 @@ document.addEventListener('DOMContentLoaded', () => {
             if (direction === 'next') this.currentTrackIndex++; else if (direction === 'prev') this.currentTrackIndex--;
             if (this.currentTrackIndex >= this.tracks.length) this.currentTrackIndex = 0; if (this.currentTrackIndex < 0) this.currentTrackIndex = this.tracks.length - 1;
             musicAudio.src = this.tracks[this.currentTrackIndex]; this.updateTrackDisplay();
-            musicAudio.play().then(() => { playPauseBtn.textContent = '||'; playPauseBtn.dataset.state = 'playing'; }).catch(e => console.error("Audio playback failed: ", e));
+            musicAudio.play().then(() => { playPauseBtn.textContent = '||'; playPauseBtn.dataset.state = 'playing'; }).catch(e => { console.error("Audio playback failed:", e);});
         },
         updateTrackDisplay() { trackNameEl.textContent = this.tracks[this.currentTrackIndex].replace('.mp3', ''); }
     };
     
     function createAudioContext() { if (!masterAudioCtx) masterAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); return masterAudioCtx; }
-    function createSound(type) { /* ... same as before ... */ }
+    function createSound(type) {
+        const audioCtx = createAudioContext();
+        return () => {
+            if (!audioCtx) return; let osc = audioCtx.createOscillator(); let gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination); gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            switch (type) {
+                case 'hover': osc.type = 'triangle'; osc.frequency.setValueAtTime(440, 0); gain.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 0.01); gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1); break;
+                case 'select': osc.type = 'sine'; osc.frequency.setValueAtTime(660, 0); gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.02); gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2); break;
+                case 'click': osc.type = 'sine'; osc.frequency.setValueAtTime(1000, 0); gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.01); gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.05); break;
+            }
+            osc.start(audioCtx.currentTime); osc.stop(audioCtx.currentTime + 0.3);
+        };
+    }
 
     const MothAI = {
         move() {
-            const targets = [menuContainer, jukeboxContainer];
-            const target = targets[Math.floor(Math.random() * targets.length)];
+            const targets = [menuContainer, jukeboxContainer]; const target = targets[Math.floor(Math.random() * targets.length)];
             const rect = target.getBoundingClientRect();
-            mothAI.style.top = `${rect.top + (rect.height / 2)}px`;
-            mothAI.style.left = `${rect.left + (rect.width / 2) - (mothAI.width / 2)}px`;
+            mothAI.style.top = `${rect.top + (rect.height / 2)}px`; mothAI.style.left = `${rect.left + (rect.width / 2) - (mothAI.width / 2)}px`;
         }
     };
     
     function activateStart() {
-        if (AppState.menuActive) return;
-        AppState.menuActive = true;
+        if (AppState.menuActive) return; AppState.menuActive = true;
         sfxHover = createSound('hover'); sfxSelect = createSound('select'); sfxClick = createSound('click');
         Jukebox.setup(); Jukebox.playTrack();
         DigitalPet.animate();

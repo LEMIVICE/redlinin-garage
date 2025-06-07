@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REDLININ' v1.8.0</title>
+  <title>REDLININ' v1.9.0</title>
   <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -30,12 +30,11 @@
         <div id="car-switcher-left" class="car-switcher hidden">&lt;</div>
         <div id="car-switcher-right" class="car-switcher hidden">&gt;</div>
         <div id="hover-car-bay">
-            <img class="hover-car" src="hover_ship_cutout.png" alt="Hover Ship 1" data-car-id="0">
-            <img class="hover-car hidden" src="GARAGE 2ND HOVERSHIP.png" alt="Hover Ship 2" data-car-id="1">
-            <img class="hover-car hidden" src="GARAGE 3RD HOVERSHIP.png" alt="Hover Ship 3" data-car-id="2">
-            <img class="hover-car hidden" src="GARAGE 4TH HOVERSHIP.png" alt="Hover Ship 4" data-car-id="3">
+            <img class="hover-car active" src="hover_ship_cutout.png" alt="Hover Ship 1" data-car-id="0">
+            <img class="hover-car" src="GARAGE 2ND HOVERSHIP.png" alt="Hover Ship 2" data-car-id="1">
+            <img class="hover-car" src="GARAGE 3RD HOVERSHIP.png" alt="Hover Ship 3" data-car-id="2">
+            <img class="hover-car" src="GARAGE 4TH HOVERSHIP.png" alt="Hover Ship 4" data-car-id="3">
         </div>
-        <div id="engine-glow"></div>
       </div>
     </div>
 
@@ -59,10 +58,10 @@
         <div id="menu">
             <div id="menu-selector">&gt;</div>
             <div class="menu-item" data-action="adventure">ADVENTURE</div>
-            <div class="menu-item" data-action="hangar" data-target="hangar-select">HANGAR</div>
-            <div class="menu-item" data-action="secrets" data-target="glitch-shop">SECRETS SHOP</div>
-            <div class="menu-item" data-action="options" data-target="dna-chip">DNA CHIP</div>
-            <div class="menu-item" data-action="profile" data-target="memory-disc">MEMORY DISC?</div>
+            <div class="menu-item" data-action="hangar">HANGAR</div>
+            <div class="menu-item" data-action="secrets">SECRETS SHOP</div>
+            <div class="menu-item" data-action="options">DNA CHIP</div>
+            <div class="menu-item" data-action="profile">MEMORY DISC?</div>
         </div>
       </div>
       
@@ -85,14 +84,6 @@
       <div id="system-scroller"><p>//SYS_KERNEL_OK //RPM is religion. Speed is god.</p></div>
     </div>
 
-    <!-- Interactive Terminal -->
-    <div id="terminal-screen" class="hidden">
-        <div class="terminal-content">
-            <p id="terminal-title">SYSTEM TERMINAL</p>
-            <div id="terminal-body"></div>
-            <div class="terminal-back-button">BACK</div>
-        </div>
-    </div>
   </div>
 
   <script src="script.js"></script>
