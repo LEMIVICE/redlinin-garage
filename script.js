@@ -29,9 +29,7 @@ window.onload = () => {
 
     // --- Audio ---
     let masterAudioCtx, musicAudio, ambientAudio, sfxHover, sfxSelect, sfxClick, sfxZap;
-
     function createAudioContext() { if (!masterAudioCtx) masterAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); return masterAudioCtx; }
-    
     function createSound(type) {
         const audioCtx = createAudioContext();
         return () => {
@@ -55,13 +53,11 @@ window.onload = () => {
         run() {
             let i = 0;
             const interval = setInterval(() => {
-                if (i < this.lines.length) {
-                    elements.bootText.innerHTML += this.lines[i] + "\n"; i++;
-                } else {
+                if (i < this.lines.length) { elements.bootText.innerHTML += this.lines[i] + "\n"; i++; } 
+                else {
                     clearInterval(interval);
                     setTimeout(() => {
-                        elements.bootScreen.style.transition = 'opacity 1s';
-                        elements.bootScreen.style.opacity = '0';
+                        elements.bootScreen.style.transition = 'opacity 1s'; elements.bootScreen.style.opacity = '0';
                         setTimeout(() => {
                             elements.bootScreen.classList.add('hidden');
                             elements.mainContainer.classList.remove('hidden');
@@ -102,14 +98,114 @@ window.onload = () => {
     const LockpickGame = {
         ctx: elements.lockpickCanvas.getContext('2d'),
         isActive: false, rings: [], keys: [], currentRingIndex: 0, selectedKeyIndex: 0, playerRotation: 0,
-        generateProblem(difficulty) { /* ... same logic ... */ },
+        generateProblem(difficulty) {
+            this.rings = []; this.keys = []; this.currentRingIndex = 0;
+            const numRings = difficulty, totalSlots = 16;
+            let usedSlots = new Set();
+            for (let i = 0; i < numRings; i++) {
+                let solutionKey = new Set();
+                let numGaps = 2 + i;
+                while(solutionKey.size < numGaps) {
+                    let gap = Math.floor(Math.random() * totalSlots);
+                    if (!usedSlots.has(gap)) { solutionKey.add(gap); usedSlots.add(gap); }
+                }
+                this.rings.push({ solved: false, gaps: solutionKey });
+                this.keys.push({ used: false, pins: solutionKey });
+            }
+            for(let i=0; i<3; i++) {
+                let falseKey = new Set();
+                 while(falseKey.size < 3) { falseKey.add(Math.floor(Math.random() * totalSlots)); }
+                 this.keys.push({ used: false, pins: falseKey });
+            }
+            this.keys.sort(() => Math.random() - 0.5);
+            this.playerRotation = 0;
+        },
         start() { this.isActive = true; this.generateProblem(2); elements.lockpickContainer.classList.remove('hidden'); this.renderKeys(); this.draw(); elements.lockpickMessage.textContent = "Align key and press [SPACE]"; },
         stop() { this.isActive = false; elements.lockpickContainer.classList.add('hidden'); },
-        renderKeys() { /* ... same logic ... */ },
-        drawKey(ctx, key, scale) { /* ... same logic ... */ },
-        draw() { /* ... same logic ... */ },
-        attemptSlot() { /* ... same logic ... */ },
-        handleInput(e) { if(!this.isActive) return; /* ... same logic ... */ }
+        renderKeys() {
+            elements.lockpickKeysContainer.innerHTML = '';
+            this.keys.forEach((key, index) => {
+                const slot = document.createElement('div');
+                slot.className = 'key-slot';
+                if(index === this.selectedKeyIndex) slot.classList.add('selected');
+                if(key.used) slot.style.opacity = '0.2';
+                const canvas = document.createElement('canvas');
+                canvas.className = 'key-canvas'; canvas.width = 60; canvas.height = 60;
+                slot.appendChild(canvas);
+                this.drawKey(canvas.getContext('2d'), key, 1);
+                slot.addEventListener('click', () => { if(!key.used) { this.selectedKeyIndex = index; this.renderKeys(); this.draw(); } });
+                elements.lockpickKeysContainer.appendChild(slot);
+            });
+        },
+        drawKey(ctx, key, scale) {
+            const radius = 28 * scale, centerX = 30 * scale, centerY = 30 * scale;
+            ctx.clearRect(0, 0, 60, 60); ctx.strokeStyle = 'lime'; ctx.lineWidth = 2 * scale;
+            ctx.beginPath(); ctx.arc(centerX, centerY, radius, 0, Math.PI * 2); ctx.stroke();
+            key.pins.forEach(pinIndex => {
+                const angle = (pinIndex / 16) * Math.PI * 2;
+                const x1 = centerX + Math.cos(angle) * (radius - 5 * scale), y1 = centerY + Math.sin(angle) * (radius - 5 * scale);
+                const x2 = centerX + Math.cos(angle) * (radius + 5 * scale), y2 = centerY + Math.sin(angle) * (radius + 5 * scale);
+                ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+            });
+        },
+        draw() {
+            if(!this.isActive) return;
+            const r = this.ctx.canvas.width / 2; this.ctx.clearRect(0, 0, r*2, r*2);
+            this.rings.forEach((ring, index) => {
+                const radius = r - 20 - (index * 25);
+                if(radius < 10) return;
+                this.ctx.strokeStyle = ring.solved ? 'yellow' : (index === this.currentRingIndex ? 'cyan' : '#005555');
+                this.ctx.lineWidth = 5; this.ctx.beginPath();
+                for(let i = 0; i < 16; i++) {
+                    if(!ring.gaps.has(i)) {
+                       const angle = (i / 16) * Math.PI * 2 - (Math.PI / 16);
+                       this.ctx.arc(r, r, radius, angle, angle + (Math.PI/8));
+                    }
+                }
+                this.ctx.stroke();
+            });
+            const selectedKey = this.keys[this.selectedKeyIndex], currentRing = this.rings[this.currentRingIndex];
+            if(!selectedKey || !currentRing) return;
+            const keyRadius = r - 20 - (this.currentRingIndex * 25);
+            this.ctx.save(); this.ctx.translate(r,r); this.ctx.rotate(this.playerRotation * Math.PI / 180); this.ctx.translate(-r,-r);
+            this.ctx.lineWidth = 3;
+            selectedKey.pins.forEach(pinIndex => {
+                 const angle = (pinIndex / 16) * Math.PI * 2;
+                 this.ctx.strokeStyle = currentRing.gaps.has(pinIndex) ? 'lime' : 'red';
+                 const x1 = r + Math.cos(angle) * (keyRadius - 8), y1 = r + Math.sin(angle) * (keyRadius - 8);
+                 const x2 = r + Math.cos(angle) * (keyRadius + 8), y2 = r + Math.sin(angle) * (keyRadius + 8);
+                 this.ctx.beginPath(); this.ctx.moveTo(x1, y1); this.ctx.lineTo(x2, y2); this.ctx.stroke();
+            });
+            this.ctx.restore();
+        },
+        attemptSlot() {
+            const key = this.keys[this.selectedKeyIndex], ring = this.rings[this.currentRingIndex];
+            const rotationOffset = Math.round((this.playerRotation / 22.5) % 16 + 16) % 16;
+            let success = true;
+            if(key.pins.size !== ring.gaps.size) { success = false; } 
+            else { key.pins.forEach(pinIndex => { if(!ring.gaps.has((pinIndex + rotationOffset) % 16)) { success = false; } }); }
+            if(success) {
+                sfxSelect(); ring.solved = true; key.used = true;
+                this.currentRingIndex++; elements.lockpickMessage.textContent = `RING ${this.currentRingIndex} SOLVED`;
+                if(this.currentRingIndex >= this.rings.length) {
+                    elements.lockpickMessage.textContent = "BREACH SUCCESSFUL!"; setTimeout(() => this.stop(), 2000);
+                }
+                this.renderKeys(); this.draw();
+            } else {
+                elements.lockpickMessage.textContent = "KEY MISMATCH. TRY AGAIN.";
+                this.ctx.fillStyle = 'rgba(255, 0, 0, 0.3)'; this.ctx.fillRect(0,0,this.ctx.canvas.width, this.ctx.canvas.height);
+            }
+        },
+        handleInput(e) {
+            if(!this.isActive) return;
+            switch(e.key) {
+                case 'a': this.playerRotation -= 22.5; break; case 'd': this.playerRotation += 22.5; break;
+                case 'w': this.selectedKeyIndex = (this.selectedKeyIndex - 1 + this.keys.length) % this.keys.length; if(this.keys[this.selectedKeyIndex].used) this.handleInput({key: 'w'}); this.renderKeys(); break;
+                case 's': this.selectedKeyIndex = (this.selectedKeyIndex + 1) % this.keys.length; if(this.keys[this.selectedKeyIndex].used) this.handleInput({key: 's'}); this.renderKeys(); break;
+                case ' ': this.attemptSlot(); break;
+            }
+            this.draw();
+        }
     };
     
     // --- Main Activation ---
