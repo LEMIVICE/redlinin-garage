@@ -1,64 +1,46 @@
 /* --- Basic Setup --- */
 body { margin: 0; padding: 0; background-color: #000; font-family: 'Draco', sans-serif; overflow: hidden; color: white; cursor: none; }
-/* ... other base styles ... */
+#custom-cursor { position: fixed; width: 25px; height: 25px; border: 2px solid cyan; border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: transform 0.1s ease-out, background-color 0.2s ease; box-shadow: 0 0 10px cyan, inset 0 0 10px cyan; opacity: 0; }
+#custom-cursor.visible { opacity: 1; }
+.hidden { display: none !important; }
+
+/* --- Boot Screen --- */
+#boot-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center; font-family: monospace; }
+#boot-text { font-size: 1.2rem; color: #0f0; text-shadow: 0 0 5px #0f0; white-space: pre; }
+
+/* --- Scene & Main Container --- */
+#main-container { opacity: 0; transition: opacity 1s ease-in; pointer-events: none; }
+#main-container.visible { opacity: 1; pointer-events: auto; }
+#scene { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+#video-overlay-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; mix-blend-mode: screen; opacity: 0.4; }
+#overlay-video { width: 100%; height: 100%; object-fit: cover; }
+#background-layer { position: absolute; top: -5%; left: -5%; width: 110%; height: 110%; background: url('garage_bg.png') no-repeat center center; background-size: cover; }
+
+/* Interactive Elements */
+#interactive-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; }
+.interactive-item { position: absolute; border: 2px dashed rgba(0, 255, 255, 0); transition: border-color 0.3s, box-shadow 0.3s; cursor: none; }
+.interactive-item:hover { border-color: rgba(0, 255, 255, 0.5); box-shadow: 0 0 15px rgba(0, 255, 255, 0.5); }
+#toolbox { bottom: 10%; right: 10%; width: 150px; height: 120px; }
+/* ... other interactive item styles */
+
+/* Hangar & Stats */
+#hangar-container { position: absolute; width: 100%; height: 100%; }
+#hover-car-bay { position: absolute; width: 45%; bottom: 8%; left: 50%; transform: translateX(-50%); z-index: 3; animation: float 4s ease-in-out infinite; }
+.hover-car { width: 100%; position: absolute; top: 0; left: 0; transition: opacity 0.5s ease-in-out; opacity: 0; }
+.hover-car.active { opacity: 1; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2%); } }
+/* ... car switcher styles ... */
+#holographic-stats { position: absolute; bottom: 20%; left: 10%; width: 250px; padding: 20px; font-family: monospace; color: cyan; background: rgba(0, 20, 30, 0.5); border: 1px solid rgba(0, 255, 255, 0.3); text-shadow: 0 0 5px cyan; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; z-index: 22; }
+#holographic-stats.visible { opacity: 1; transform: translateY(0); }
 
 /* --- Lockpick Mini-Game Styles --- */
-#lockpick-container {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-#lockpick-ui {
-    width: 350px;
-    background: rgba(10, 20, 30, 0.85);
-    border: 2px solid cyan;
-    box-shadow: 0 0 20px cyan, inset 0 0 20px rgba(0, 255, 255, 0.2);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    font-family: monospace;
-}
-#lockpick-canvas {
-    width: 250px;
-    height: 250px;
-    background-color: #050a0f;
-    border-radius: 50%;
-}
-#lockpick-keys {
-    display: flex;
-    gap: 10px;
-}
-.key-slot {
-    width: 60px;
-    height: 60px;
-    border: 1px solid rgba(0, 255, 255, 0.3);
-    cursor: none;
-    position: relative;
-}
-.key-slot.selected {
-    border-color: yellow;
-    box-shadow: 0 0 10px yellow;
-}
-.key-canvas {
-    width: 100%;
-    height: 100%;
-}
-#lockpick-message {
-    color: yellow;
-    text-shadow: 0 0 5px yellow;
-    min-height: 20px;
-}
-#lockpick-close {
-    background: none;
-    border: 1px solid red;
-    color: red;
-    padding: 5px 10px;
-    cursor: none;
-}
-/* ... (rest of the styles from 1.9.1) ... */
+#lockpick-container { position: fixed; top: 20px; left: 20px; z-index: 600; display: flex; align-items: center; justify-content: center; }
+#lockpick-ui { width: 350px; background: rgba(10, 20, 30, 0.85); border: 2px solid cyan; box-shadow: 0 0 20px cyan, inset 0 0 20px rgba(0, 255, 255, 0.2); padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px; font-family: monospace; }
+#lockpick-canvas { width: 250px; height: 250px; background-color: #050a0f; border-radius: 50%; }
+#lockpick-keys { display: flex; gap: 10px; }
+.key-slot { width: 60px; height: 60px; border: 1px solid rgba(0, 255, 255, 0.3); cursor: none; position: relative; }
+.key-slot.selected { border-color: yellow; box-shadow: 0 0 10px yellow; }
+.key-canvas { width: 100%; height: 100%; }
+#lockpick-message { color: yellow; text-shadow: 0 0 5px yellow; min-height: 20px; }
+#lockpick-close { background: none; border: 1px solid red; color: red; padding: 5px 10px; cursor: none; }
+/* ... (All other UI styles from previous versions) ... */
