@@ -4,10 +4,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REDLININ' Garage v1.3.1</title>
+  <title>REDLININ' Garage v1.2.9</title>
   <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
   <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: url('garage_bg.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Draco', sans-serif;
+    }
+
     #press-start {
       position: absolute;
       top: 45%;
@@ -26,13 +33,46 @@
       to { opacity: 1; }
     }
 
-    #hoverCar {
-      animation: hover 3s ease-in-out infinite alternate;
+    #video-overlay-container {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      mix-blend-mode: screen;
+      opacity: 0.5;
+      pointer-events: none;
     }
 
-    @keyframes hover {
-      from { transform: translateX(-50%) translateY(0); }
-      to { transform: translateX(-50%) translateY(-10px); }
+    #overlay-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #hoverCar {
+      position: absolute;
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40%;
+      z-index: 5;
+    }
+
+    #menu {
+      position: absolute;
+      top: 10%;
+      right: 5%;
+      z-index: 10;
+      color: white;
+    }
+
+    #jukebox-skin {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      z-index: 10;
     }
 
     #visualizer-wrapper {
@@ -45,7 +85,6 @@
       border-radius: 4px;
       z-index: 11;
       overflow: hidden;
-      display: block;
     }
 
     #visualizer {
@@ -63,7 +102,7 @@
 
   <div id="press-start">[ PRESS START ]</div>
 
-  <img id="hoverCar" class="hover-car" src="hover_ship_cutout.png" alt="Hover Car"/>
+  <img id="hoverCar" src="hover_ship_cutout.png" alt="Hover Car"/>
 
   <div id="menu">
     <div>ADVENTURE</div>
@@ -114,6 +153,9 @@
       if (!drawRequested) return;
       requestAnimationFrame(draw);
       analyser.getByteFrequencyData(dataArray);
+
+      console.log("Analyzer data sample:", dataArray.slice(0, 5)); // DEBUG LOG
+
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       const barWidth = (canvas.width / bufferLength) * 1.5;
@@ -142,6 +184,7 @@
         audio.play();
         drawRequested = true;
         draw();
+        console.log("Audio and visualizer started."); // DEBUG LOG
       });
     }
 
