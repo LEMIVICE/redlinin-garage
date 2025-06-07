@@ -4,9 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REDLININ' Garage v1.2.8</title>
+  <title>REDLININ' Garage v1.2.9</title>
   <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
   <style>
     body {
       margin: 0;
@@ -122,6 +121,16 @@
   </div>
 
   <script>
+    const canvas = document.getElementById("visualizer");
+    const ctx = canvas.getContext("2d");
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 64;
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    let drawRequested = false;
+
     const tracks = [
       "track_01.mp3", "track_02.mp3", "track_03.mp3", "track_04.mp3", "track_05.mp3",
       "track_06.mp3", "track_07.mp3", "track_08.mp3", "track_09.mp3", "track_10.mp3",
@@ -136,29 +145,21 @@
 
     let currentTrack = 0;
     const audio = new Audio(tracks[currentTrack]);
-    audio.loop = false;
-    audio.volume = 1;
-
-    const canvas = document.getElementById("visualizer");
-    const ctx = canvas.getContext("2d");
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const analyser = audioCtx.createAnalyser();
-    let drawRequested = false;
-
     const source = audioCtx.createMediaElementSource(audio);
     source.connect(analyser);
     analyser.connect(audioCtx.destination);
-    analyser.fftSize = 64;
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
 
     function draw() {
       if (!drawRequested) return;
       requestAnimationFrame(draw);
       analyser.getByteFrequencyData(dataArray);
+
+      console.log("Analyzer data sample:", dataArray.slice(0, 5)); // DEBUG LOG
+
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       const barWidth = (canvas.width / bufferLength) * 1.5;
+
       for (let i = 0; i < bufferLength; i++) {
         const barHeight = dataArray[i] / 2;
         ctx.fillStyle = 'lime';
@@ -173,14 +174,17 @@
     });
 
     const pressStart = document.getElementById("press-start");
+
     function activateStart() {
       pressStart.style.transition = "opacity 1s ease-out";
       pressStart.style.opacity = 0;
       setTimeout(() => { pressStart.style.display = "none"; }, 1000);
+
       audioCtx.resume().then(() => {
         audio.play();
         drawRequested = true;
         draw();
+        console.log("Audio and visualizer started."); // DEBUG LOG
       });
     }
 
