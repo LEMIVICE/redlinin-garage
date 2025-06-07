@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REDLININ' v1.7.0</title>
+  <title>REDLININ' v1.8.0</title>
   <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -26,10 +26,9 @@
       </div>
       <div id="background-layer"></div>
       
-      <!-- Hangar System -->
       <div id="hangar-container">
-        <div id="car-switcher-left" class="car-switcher">&lt;</div>
-        <div id="car-switcher-right" class="car-switcher">&gt;</div>
+        <div id="car-switcher-left" class="car-switcher hidden">&lt;</div>
+        <div id="car-switcher-right" class="car-switcher hidden">&gt;</div>
         <div id="hover-car-bay">
             <img class="hover-car" src="hover_ship_cutout.png" alt="Hover Ship 1" data-car-id="0">
             <img class="hover-car hidden" src="GARAGE 2ND HOVERSHIP.png" alt="Hover Ship 2" data-car-id="1">
@@ -42,9 +41,9 @@
 
     <!-- UI Layer -->
     <div id="ui-layer">
+      <div id="press-start" class="hidden">[ PRESS START ]</div>
       <img id="moth-ai" src="GARAGE DIGI-MOTH.png" alt="MOTH AI">
 
-      <!-- Digital Pet Zone -->
       <div id="digital-pet-zone">
         <div id="pet-container-1" class="pet-container">
             <img src="GARAGE DIGITAL PET SKIN.png" class="pet-skin">
@@ -84,12 +83,11 @@
       </div>
 
       <div id="system-scroller"><p>//SYS_KERNEL_OK //RPM is religion. Speed is god.</p></div>
-      <div id="tempo-warning" class="hidden">⚠️ OVERHEAT WARNING: TEMPO CORE UNSTABLE</div>
     </div>
 
     <!-- Interactive Terminal -->
     <div id="terminal-screen" class="hidden">
-        <div class="terminal-content" id="terminal-content-default">
+        <div class="terminal-content">
             <p id="terminal-title">SYSTEM TERMINAL</p>
             <div id="terminal-body"></div>
             <div class="terminal-back-button">BACK</div>
