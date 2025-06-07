@@ -1,11 +1,93 @@
+/* --- Basic Setup --- */
 body {
   margin: 0;
   padding: 0;
-  background: url('garage_bg.png') no-repeat center center fixed;
-  background-size: cover;
+  background-color: #000;
   font-family: 'Draco', sans-serif;
   overflow: hidden;
   color: white;
+}
+
+/* --- Scene and Parallax --- */
+#scene {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  transition: transform 0.2s ease-out; /* For parallax effect */
+}
+
+#background-layer {
+    position: absolute;
+    top: -5%; left: -5%;
+    width: 110%; height: 110%;
+    background: url('garage_bg.png') no-repeat center center;
+    background-size: cover;
+}
+
+#hover-car-container {
+    position: absolute;
+    width: 45%; /* Adjust size of the car */
+    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    animation: float 4s ease-in-out infinite;
+}
+
+#hoverCar {
+  width: 100%;
+}
+
+@keyframes float {
+  0%   { transform: translate(-50%, 0%); }
+  50%  { transform: translate(-50%, -2%); }
+  100% { transform: translate(-50%, 0%); }
+}
+
+/* --- Engine Glow --- */
+#engine-glow {
+    position: absolute;
+    bottom: 18%;
+    right: 22%;
+    width: 25%;
+    height: 25%;
+    background-color: red;
+    border-radius: 50%;
+    filter: blur(30px);
+    opacity: 0.6;
+    animation: pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+    from { opacity: 0.4; transform: scale(0.95); }
+    to { opacity: 0.7; transform: scale(1.05); }
+}
+
+
+/* --- Video Overlay --- */
+#video-overlay-container {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 5;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+#overlay-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.4;
+}
+
+/* --- UI Layer --- */
+#ui-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 10;
 }
 
 #press-start {
@@ -26,89 +108,119 @@ body {
   to { opacity: 1; }
 }
 
-#video-overlay-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 5;
-  pointer-events: none;
-  mix-blend-mode: screen;
-}
-
-#overlay-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.5;
-}
-
-.hover-car {
-  position: absolute;
-  bottom: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40%;
-  z-index: 2;
-  animation: float 4s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%   { transform: translate(-50%, 0%); }
-  50%  { transform: translate(-50%, -2%); }
-  100% { transform: translate(-50%, 0%); }
-}
-
+/* --- Menu --- */
 #menu {
   position: absolute;
-  top: 10%;
-  right: 5%;
-  z-index: 10;
-  font-family: 'Draco', sans-serif;
+  top: 15%;
+  right: 7%;
   text-align: right;
 }
 
 .menu-item {
-  font-size: 22px;
-  padding: 5px 10px;
-  margin-bottom: 10px;
+  font-size: 24px;
+  padding: 8px 0;
+  margin-bottom: 15px;
   color: cyan;
   text-shadow: 0 0 8px fuchsia;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  opacity: 0.7;
 }
 
-.menu-item:hover {
+/* State for keyboard/mouse selection */
+.menu-item.selected {
   color: yellow;
-  transform: translateX(-15px);
+  transform: translateX(-20px);
+  opacity: 1;
   text-shadow: 0 0 12px yellow;
 }
 
 .menu-item.disabled {
-  color: gray;
+  color: #555;
   text-shadow: none;
   pointer-events: none;
   cursor: default;
+  opacity: 0.4;
 }
 
+#menu-selector {
+    position: absolute;
+    right: -30px; /* Position it to the left of the menu items */
+    font-size: 24px;
+    color: yellow;
+    text-shadow: 0 0 12px yellow;
+    transition: top 0.2s ease-in-out;
+    opacity: 0; /* Hidden by default */
+}
+
+/* --- Jukebox --- */
 #jukebox-skin {
   position: absolute;
   bottom: 20px;
   left: 20px;
   z-index: 20;
   width: 240px;
-  height: auto;
 }
 
 #jukebox-skin img {
-  width: 100%;
+    width: 100%;
 }
 
 #visualizer {
-  position: absolute;
-  bottom: 56px;
-  left: 25px;
-  width: 192px;
-  height: 40px;
+    position: absolute;
+    bottom: 56px;
+    left: 25px;
+    width: 192px;
+    height: 40px;
+}
+
+#track-display {
+    position: absolute;
+    top: 50px;
+    left: 25px;
+    width: 192px;
+    height: 40px;
+    text-align: center;
+    color: lime;
+    font-family: monospace;
+    font-size: 12px;
+    text-shadow: 0 0 5px lime;
+    overflow: hidden;
+}
+
+#track-name {
+    margin: 0;
+    white-space: nowrap;
+    animation: marquee 10s linear infinite;
+}
+
+@keyframes marquee {
+    0%   { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+
+/* --- Message Screen --- */
+#message-screen {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+#message-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#message-text {
+    font-size: 32px;
+    color: cyan;
+    text-shadow: 0 0 10px cyan;
 }
