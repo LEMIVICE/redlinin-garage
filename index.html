@@ -3,70 +3,105 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REDLININ' Garage v1.5.0</title>
+  <title>REDLININ' v1.6.0</title>
   <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Custom Cursor Element -->
-  <div id="custom-cursor"></div>
-
-  <!-- Background and Parallax Container -->
-  <div id="scene">
-    <div id="video-overlay-container">
-      <video id="overlay-video" autoplay loop muted playsinline>
-        <source src="dust_overlay_v2.mp4" type="video/mp4" />
-      </video>
-    </div>
-    <div id="background-layer"></div>
-    <div id="hover-car-container">
-      <img id="hoverCar" class="hover-car" src="hover_ship_cutout.png" alt="Hover Ship" />
-      <div class="thruster-glow"></div>
-      <div id="engine-glow"></div>
-    </div>
+  <!-- 1. BOOT-UP SEQUENCE -->
+  <div id="boot-screen">
+    <div id="boot-text"></div>
   </div>
 
-  <!-- UI Layer -->
-  <div id="ui-layer">
-    <div id="press-start">[ PRESS START ]</div>
+  <!-- 2. MAIN GARAGE SCENE (Initially Hidden) -->
+  <div id="main-container" class="hidden">
+    <!-- Custom Cursor Element -->
+    <div id="custom-cursor"></div>
 
-    <div id="menu-container">
-      <div id="menu">
-          <div id="menu-selector">&gt;</div>
-          <div class="menu-item" data-action="adventure">ADVENTURE</div>
-          <div class="menu-item" data-action="exhibition">EXHIBITION</div>
-          <div class="menu-item disabled" data-action="customize">CUSTOMIZE</div>
-          <div class="menu-item" data-action="options">OPTIONS</div>
-          <div class="menu-item" data-action="profile">PROFILE</div>
-          <div class="menu-item" data-action="secrets">SECRETS SHOP</div>
+    <!-- Background and Parallax Container -->
+    <div id="scene">
+      <div id="video-overlay-container">
+        <video id="overlay-video" autoplay loop muted playsinline>
+          <source src="dust_overlay_v2.mp4" type="video/mp4" />
+        </video>
       </div>
-    </div>
-    
-    <div id="jukebox-container">
-      <img src="mp3_player_skin.png" alt="MP3 Player Skin" class="jukebox-bg">
-      <canvas id="visualizer"></canvas>
-      <div id="rpm-meter">
-        <div id="rpm-needle"></div>
-      </div>
-      <div id="track-display">
-        <p id="track-name">NO SIGNAL</p>
-      </div>
-      <div id="jukebox-controls">
-        <div id="prev-track" class="control-button">«</div>
-        <div id="play-pause" class="control-button" data-state="paused">►</div>
-        <div id="next-track" class="control-button">»</div>
-      </div>
-      <div id="volume-container">
-        <span id="volume-icon">🔊</span>
-        <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.8">
+      <div id="background-layer"></div>
+      <div id="hover-car-container">
+        <img id="hoverCar" class="hover-car" src="hover_ship_cutout.png" alt="Hover Ship" />
+        <div class="thruster-glow"></div>
+        <div id="engine-glow"></div>
+        <!-- Secret hyperlink on the car -->
+        <div class="secret-spiral" data-target="garage-puzzle"></div>
       </div>
     </div>
 
-    <div id="message-screen" class="hidden">
-        <p id="message-text">LOADING...</p>
-        <div id="back-button" class="hidden">BACK</div>
+    <!-- UI Layer -->
+    <div id="ui-layer">
+      <!-- M.O.T.H. AI Companion -->
+      <div id="moth-ai"></div>
+
+      <!-- Cyber-Pet -->
+      <div id="cyber-pet">
+        <div id="pet-face">^_^</div>
+      </div>
+
+      <div id="menu-container">
+        <div id="menu">
+            <div id="menu-selector">&gt;</div>
+            <div class="menu-item" data-action="adventure">ADVENTURE</div>
+            <div class="menu-item" data-action="exhibition">EXHIBITION</div>
+            <div class="menu-item" data-action="secrets" data-target="glitch-shop">SECRETS SHOP</div>
+            <div class="menu-item" data-action="options" data-target="dna-chip">DNA CHIP</div>
+            <div class="menu-item" data-action="profile" data-target="memory-disc">MEMORY DISC?</div>
+            <div class="menu-item" data-action="system" data-target="bpm-pedia">BPM ENCYCLOPEDIA</div>
+        </div>
+      </div>
+      
+      <div id="jukebox-container">
+        <img src="mp3_player_skin.png" alt="MP3 Player Skin" class="jukebox-bg">
+        <canvas id="visualizer"></canvas>
+        <div id="rpm-meter"><div id="rpm-needle"></div></div>
+        <div id="track-display"><p id="track-name">NO SIGNAL</p></div>
+        <div id="jukebox-controls">
+          <div id="prev-track" class="control-button">«</div>
+          <div id="play-pause" class="control-button" data-state="paused">►</div>
+          <div id="next-track" class="control-button">»</div>
+        </div>
+        <div id="volume-container">
+          <span id="volume-icon">🔊</span>
+          <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.8">
+        </div>
+      </div>
+
+      <!-- System Status Scroller -->
+      <div id="system-scroller">
+        <p>//SYS_KERNEL_OK //AUDIO_BUFFER_7ms //NET_STATUS: OFFLINE //RPM is religion. Speed is god. //DJ_FUEGO.EXE: REDLINE TERRORIST</p>
+      </div>
+
+       <!-- "DO NOT PRESS" Button -->
+      <button id="randomizer-button">DO NOT PRESS</button>
+
+      <!-- TEMPO WARNING UI -->
+      <div id="tempo-warning" class="hidden">⚠️ OVERHEAT WARNING: TEMPO CORE UNSTABLE</div>
     </div>
+
+    <!-- 3. INTERACTIVE TERMINAL/MODAL SCREEN -->
+    <div id="terminal-screen" class="hidden">
+        <div class="terminal-content" id="terminal-content-default">
+            <p id="terminal-title">SYSTEM TERMINAL</p>
+            <div id="terminal-body"></div>
+            <div class="terminal-back-button">BACK</div>
+        </div>
+        <!-- Special UI for memory disc -->
+        <div class="terminal-content" id="terminal-content-memory-disc">
+            <p>MEMORY DISC</p>
+            <div class="disc-prompt">INSERT DISC TO ACCESS "TURBOCORE MODE"</div>
+            <button class="disc-insert-button">INSERT</button>
+            <div class="terminal-back-button">EJECT</div>
+        </div>
+    </div>
+
   </div>
 
   <script src="script.js"></script>
