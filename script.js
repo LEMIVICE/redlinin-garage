@@ -1,4 +1,4 @@
-console.log('REDLININ Garage v1.9.8 - Full Interactive Build');
+console.log('REDLININ Garage v2.0.1 - Full Interactive Build');
 
 window.onload = () => {
     // --- App State ---
@@ -39,7 +39,7 @@ window.onload = () => {
 
     // --- Modules ---
     const BootSequence = {
-        lines: [ "LEMIVICE BIOS v1.9.8", "...", "Memory Check: OK", "...", "Loading REDLININ' OS...", "..." ],
+        lines: [ "LEMIVICE BIOS v2.0.1", "...", "Memory Check: OK", "...", "Loading REDLININ' OS...", "..." ],
         run() {
             let i = 0;
             const interval = setInterval(() => {
@@ -52,6 +52,7 @@ window.onload = () => {
                         setTimeout(() => {
                             elements.bootScreen.classList.add('hidden');
                             elements.mainContainer.classList.remove('hidden');
+                            elements.mainContainer.classList.add('visible');
                             elements.pressStart.classList.remove('hidden');
                             document.addEventListener("keydown", activateStart, { once: true });
                             document.addEventListener("click", activateStart, { once: true });
@@ -141,7 +142,7 @@ window.onload = () => {
         elements.pressStart.style.opacity = '0';
         setTimeout(() => elements.pressStart.classList.add('hidden'), 500);
         
-        elements.scene.classList.add('visible'); // Fade in the garage scene
+        elements.scene.classList.add('visible');
         elements.uiLayer.classList.add('visible');
 
         elements.menuContainer.classList.add('visible');
