@@ -1,4 +1,4 @@
-console.log('REDLININ Garage v1.9.7 - Full Interactive Build');
+console.log('REDLININ Garage v2.2.1 - Full Interactive Build');
 
 window.onload = () => {
     // --- App State ---
@@ -38,7 +38,7 @@ window.onload = () => {
 
     // --- Modules ---
     const BootSequence = {
-        lines: [ "LEMIVICE BIOS v1.9.7", "...", "Memory Check: OK", "...", "Loading REDLININ' OS...", "..." ],
+        lines: [ "LEMIVICE BIOS v2.2.1", "...", "Memory Check: OK", "...", "Loading REDLININ' OS...", "..." ],
         run() {
             let i = 0;
             const interval = setInterval(() => {
