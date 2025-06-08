@@ -1,4 +1,4 @@
-console.log('REDLININ Garage v2.0.1 - Full Interactive Build');
+console.log('REDLININ Garage v1.9.7 - Full Interactive Build');
 
 window.onload = () => {
     // --- App State ---
@@ -17,7 +17,6 @@ window.onload = () => {
         jukeboxContainer: document.getElementById('jukebox-container'), playPauseBtn: document.getElementById("play-pause"), nextBtn: document.getElementById("next-track"), prevBtn: document.getElementById("prev-track"),
         volumeSlider: document.getElementById("volume-slider"), trackNameEl: document.getElementById("track-name"), rpmNeedle: document.getElementById("rpm-needle"),
         pressStart: document.getElementById('press-start'),
-        uiLayer: document.getElementById('ui-layer'),
     };
 
     // --- Audio ---
@@ -39,7 +38,7 @@ window.onload = () => {
 
     // --- Modules ---
     const BootSequence = {
-        lines: [ "LEMIVICE BIOS v2.0.1", "...", "Memory Check: OK", "...", "Loading REDLININ' OS...", "..." ],
+        lines: [ "LEMIVICE BIOS v1.9.7", "...", "Memory Check: OK", "...", "Loading REDLININ' OS...", "..." ],
         run() {
             let i = 0;
             const interval = setInterval(() => {
@@ -52,10 +51,14 @@ window.onload = () => {
                         setTimeout(() => {
                             elements.bootScreen.classList.add('hidden');
                             elements.mainContainer.classList.remove('hidden');
-                            elements.mainContainer.classList.add('visible');
-                            elements.pressStart.classList.remove('hidden');
-                            document.addEventListener("keydown", activateStart, { once: true });
-                            document.addEventListener("click", activateStart, { once: true });
+                            setTimeout(() => {
+                                elements.mainContainer.classList.add('visible');
+                                elements.pressStart.classList.remove('hidden');
+                                elements.customCursor.classList.add('visible');
+                                Hangar.init();
+                                document.addEventListener("keydown", activateStart, { once: true });
+                                document.addEventListener("click", activateStart, { once: true });
+                            }, 50);
                         }, 1000);
                     }, 500);
                 }
@@ -70,7 +73,10 @@ window.onload = () => {
                 const option = document.createElement('div');
                 option.className = 'hangar-ship-option';
                 option.innerHTML = `<img src="${car.src}" alt="${car.alt}">`;
-                option.addEventListener('click', () => { this.setActiveCar(index); this.closeSubmenu(); });
+                option.addEventListener('click', () => {
+                    this.setActiveCar(index);
+                    this.closeSubmenu();
+                });
                 elements.hangarGrid.appendChild(option);
             });
         },
@@ -79,15 +85,21 @@ window.onload = () => {
             AppState.currentCarIndex = index;
             elements.hoverCars[AppState.currentCarIndex].classList.add('active');
         },
-        openSubmenu() { elements.hangarSubmenu.classList.remove('hidden'); },
-        closeSubmenu() { elements.hangarSubmenu.classList.add('hidden'); }
+        openSubmenu() {
+            elements.hangarSubmenu.classList.remove('hidden');
+        },
+        closeSubmenu() {
+            elements.hangarSubmenu.classList.add('hidden');
+        }
     };
 
     const DigitalPet = {
-        ctx1: elements.pet1Canvas.getContext('2d'), isDemonicUnlocked: false, animationFrame: 0, animationTimer: null,
+        ctx1: elements.pet1Canvas.getContext('2d'),
+        isDemonicUnlocked: false, animationFrame: 0, animationTimer: null,
         animations: { idle: [[0,0,1,1,0,0,0,1,1,0,0],[0,0,1,1,0,0,0,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,1,1,1,0,0,0,0],[0,0,1,1,0,0,0,1,1,0,0],[0,0,0,1,1,1,1,1,0,0,0]], idleBlink: [[0,0,0,0,0,0,0,0,0,0,0],[0,0,1,1,1,1,1,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,1,1,1,0,0,0,0],[0,0,1,1,0,0,0,1,1,0,0],[0,0,0,1,1,1,1,1,0,0,0]], happy: [[0,0,1,1,0,0,0,1,1,0,0],[0,0,1,1,0,0,0,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0,0,1,0],[0,0,1,0,0,0,0,0,1,0,0],[0,0,0,1,1,1,1,1,0,0,0]] },
         drawFrame(ctx, frameData, color) {
-            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); const pixelSizeX = ctx.canvas.width / frameData[0].length; const pixelSizeY = ctx.canvas.height / frameData.length;
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            const pixelSizeX = ctx.canvas.width / frameData[0].length; const pixelSizeY = ctx.canvas.height / frameData.length;
             for(let y = 0; y < frameData.length; y++) { for(let x = 0; x < frameData[y].length; x++) { if (frameData[y][x] === 1) { ctx.fillStyle = color; ctx.fillRect(x * pixelSizeX, y * pixelSizeY, pixelSizeX, pixelSizeY); } } }
         },
         animate() {
@@ -141,10 +153,6 @@ window.onload = () => {
         DigitalPet.animate();
         elements.pressStart.style.opacity = '0';
         setTimeout(() => elements.pressStart.classList.add('hidden'), 500);
-        
-        elements.scene.classList.add('visible');
-        elements.uiLayer.classList.add('visible');
-
         elements.menuContainer.classList.add('visible');
         addInteractiveListeners();
         setInterval(MothAI.move, 8000); MothAI.move();
