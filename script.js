@@ -1,4 +1,151 @@
-console.log('REDLININ Garage v2.2.4 - Full Interactive Build');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>REDLININ' v2.2.5</title>
+  <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="boot-screen">
+    <div id="boot-text"></div>
+  </div>
+
+  <div id="main-container" class="hidden">
+    <div id="custom-cursor"></div>
+
+    <div id="scene">
+      <div id="video-overlay-container">
+        <video id="overlay-video" autoplay loop muted playsinline>
+          <source src="dust_overlay_v2.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div id="background-layer"></div>
+      
+      <div id="hangar-container">
+        <div id="hover-car-bay">
+            <img class="hover-car active" src="hover_ship_cutout.png" alt="Hover Ship 1" data-car-id="0">
+            <img class="hover-car" src="GARAGE 2ND HOVERSHIP.png" alt="Hover Ship 2" data-car-id="1">
+            <img class="hover-car" src="GARAGE 3RD HOVERSHIP.png" alt="Hover Ship 3" data-car-id="2">
+            <img class="hover-car" src="GARAGE 4TH HOVERSHIP.png" alt="Hover Ship 4" data-car-id="3">
+        </div>
+      </div>
+      <!-- UPDATED: Clickable console in the scene -->
+      <img src="LED CONSOLE 1.png" id="clickable-console" alt="Old Console">
+    </div>
+
+    <div id="ui-layer">
+      <div id="splash-screen-overlay" class="hidden"></div>
+      <div id="press-start" class="hidden">[ PRESS START ]</div>
+      <img id="moth-ai" src="GARAGE DIGI-MOTH.png" alt="MOTH AI">
+
+      <div id="digital-pet-zone">
+        <div id="pet-container-1" class="pet-container">
+            <img src="GARAGE DIGITAL PET SKIN.png" class="pet-skin">
+            <canvas id="pet-canvas-1" class="pet-canvas"></canvas>
+        </div>
+        <div id="pet-container-2" class="pet-container hidden">
+            <img src="GARAGE DIGITAL PET SKIN 2.png" class="pet-skin">
+            <canvas id="pet-canvas-2" class="pet-canvas"></canvas>
+        </div>
+      </div>
+
+      <div id="menu-container">
+        <div id="menu">
+            <div id="menu-selector">&gt;</div>
+            <div class="menu-item" data-action="adventure">ADVENTURE</div>
+            <div class="menu-item" data-action="hangar">HANGAR</div>
+            <div class="menu-item" data-action="secrets">SECRETS SHOP</div>
+            <div class="menu-item" data-action="options">DNA CHIP</div>
+            <div class="menu-item" data-action="profile">MEMORY DISC?</div>
+        </div>
+      </div>
+      
+      <div id="jukebox-container">
+        <img src="mp3_player_skin.png" alt="MP3 Player Skin" class="jukebox-bg">
+        <canvas id="visualizer"></canvas>
+        <div id="rpm-meter"><div id="rpm-needle"></div></div>
+        <div id="track-display"><p id="track-name">NO SIGNAL</p></div>
+        <div id="jukebox-controls">
+          <div id="prev-track" class="control-button">«</div>
+          <div id="play-pause" class="control-button" data-state="paused">►</div>
+          <div id="next-track" class="control-button">»</div>
+        </div>
+        <div id="volume-container">
+          <span id="volume-icon">🔊</span>
+          <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.8">
+        </div>
+      </div>
+    </div>
+
+    <div id="hangar-submenu" class="hidden">
+        <h2>SELECT VEHICLE</h2>
+        <div id="hangar-grid"></div>
+        <button id="hangar-close-btn">CLOSE</button>
+    </div>
+  </div>
+
+  <!-- UPDATED: Console modal window with terminal game HTML -->
+  <div id="console-modal" class="hidden">
+      <div id="console-modal-content">
+          <img src="LED CONSOLE 1.png" id="console-image" alt="Console Display">
+          <div id="console-screen-content">
+              <!-- CRT overlay and noise for the authentic feel -->
+              <div class="crt-overlay"></div>
+              <div class="noise-bg"></div>
+              
+              <!-- Main Terminal Container -->
+              <div id="terminalContainer" onclick="document.getElementById('terminalInput').focus()">
+                  <!-- Header Section -->
+                  <div class="text-center">
+                      <h1 class="glitch" style="font-family: 'Orbitron', sans-serif;">CONNECTION TERMINATED</h1>
+                      <p class="text-red-500">[REASON: TEMPO LAW VIOLATION]</p>
+                  </div>
+                  
+                  <!-- Corporate Jamming Signal -->
+                  <div id="corporateBlock" class="text-center transition-opacity duration-500">
+                      <p class="text-yellow-400">-- INTRUSIVE SIGNAL DETECTED --</p>
+                      <pre id="corporateLogo" class="text-red-500">
+  ███╗   ███╗ ██████╗ ██████╗  ██████╗ ██████╗ 
+  ████╗ ████║██╔═══██╗██╔══██╗██╔═══██╗██╔══██╗
+  ██╔████╔██║██║   ██║██████╔╝██║   ██║██████╔╝
+  ██║╚██╔╝██║██║   ██║██╔══██╗██║   ██║██╔═══╝ 
+  ██║ ╚═╝ ██║╚██████╔╝██║  ██║╚██████╔╝██║     
+  ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝     
+  <span class="text-yellow-400">Tempo Authority Division</span>
+                      </pre>
+                      <p class="text-yellow-400">-- COMPLIANCE IS MANDATORY --</p>
+                  </div>
+                  
+                  <!-- Command Line Area -->
+                  <div id="commandLine">
+                      <div id="output" class="text-green-400"></div>
+                      <div class="flex items-center">
+                          <span class="text-cyan-400">R.R.D:></span>
+                          <span id="userInputDisplay" class="ml-2 break-all"></span>
+                          <span class="cursor"></span>
+                      </div>
+                      <input type="text" id="terminalInput" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                  </div>
+
+                  <!-- Hidden Music Player -->
+                  <div id="musicPlayerContainer" class="hidden text-center">
+                      <h2 class="text-cyan-400" style="font-family: 'Orbitron', sans-serif;">BROADCAST HIJACKED</h2>
+                      <div id="musicPlayer">
+                           <p>SECRET SONG UNLOCKED</p>
+                           <p class="text-gray-400">Now Playing: "Asphalt Serenade"</p>
+                           <div class="mt-1 flex items-center justify-center space-x-2">
+                               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M4.018 14.38a2.5 2.5 0 003.216 3.216l9.362-4.681a2.5 2.5 0 000-4.434L7.234 3.799A2.5 2.5 0 004.018 7.015v7.365z"></path></svg>
+                               <div class="w-32 h-1 bg-gray-700 rounded-full"><div class="w-1/3 h-full bg-cyan-400 rounded-full"></div></div>
+                           </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <button id="console-close-btn">X</buttonconsole.log('REDLININ Garage v2.2.5 - Full Interactive Build');
 
 window.onload = () => {
     // --- App State ---
@@ -18,10 +165,8 @@ window.onload = () => {
         volumeSlider: document.getElementById("volume-slider"), trackNameEl: document.getElementById("track-name"), rpmNeedle: document.getElementById("rpm-needle"),
         pressStart: document.getElementById('press-start'),
         splashScreenOverlay: document.getElementById('splash-screen-overlay'),
-        // ADDED: Console elements
         clickableConsole: document.getElementById('clickable-console'),
         consoleModal: document.getElementById('console-modal'),
-        consoleGameCanvas: document.getElementById('console-game-canvas'),
         consoleCloseBtn: document.getElementById('console-close-btn'),
     };
 
@@ -44,7 +189,7 @@ window.onload = () => {
 
     // --- Modules ---
     const BootSequence = {
-        lines: [ "LEMIVICE BIOS v2.2.4", "...", "Memory Check: OK", "...", "Loading REDLININ' OS...", "..." ],
+        lines: [ "LEMIVICE BIOS v2.2.5", "...", "Memory Check: OK", "...", "Loading REDLININ' OS...", "..." ],
         run() {
             let i = 0;
             const interval = setInterval(() => {
@@ -119,68 +264,79 @@ window.onload = () => {
         react() { clearInterval(this.animationTimer); this.drawFrame(this.ctx1, this.animations.happy, '#00ff00'); setTimeout(() => this.animate(), 1000); }
     };
     
-    // ADDED: Console Game Module
+    // UPDATED: Console Game Module
     const ConsoleGame = {
-        canvas: null,
-        ctx: null,
-        animationFrameId: null,
-
-        init(canvasElement) {
-            this.canvas = canvasElement;
-            this.ctx = this.canvas.getContext('2d');
-            this.canvas.width = 320;
-            this.canvas.height = 200;
+        elements: {},
+        secretCommand: "bypass --firestarter",
+        
+        init() {
+            this.elements = {
+                input: document.getElementById('terminalInput'),
+                userInputDisplay: document.getElementById('userInputDisplay'),
+                output: document.getElementById('output'),
+                commandLine: document.getElementById('commandLine'),
+                corporateBlock: document.getElementById('corporateBlock'),
+                corporateLogo: document.getElementById('corporateLogo'),
+                musicPlayerContainer: document.getElementById('musicPlayerContainer'),
+                container: document.getElementById('terminalContainer'),
+            };
+            this.handleInput = this.handleInput.bind(this);
+            this.handleKeydown = this.handleKeydown.bind(this);
         },
 
         start() {
-            if (this.animationFrameId) this.stop();
-            this.draw();
+            this.reset();
+            this.elements.input.focus();
+            this.elements.input.addEventListener('input', this.handleInput);
+            this.elements.input.addEventListener('keydown', this.handleKeydown);
         },
 
         stop() {
-            if (this.animationFrameId) {
-                cancelAnimationFrame(this.animationFrameId);
-                this.animationFrameId = null;
+            this.elements.input.removeEventListener('input', this.handleInput);
+            this.elements.input.removeEventListener('keydown', this.handleKeydown);
+        },
+        
+        reset() {
+            this.elements.corporateBlock.style.display = 'block';
+            this.elements.corporateLogo.classList.remove('shatter-anim');
+            this.elements.corporateBlock.style.opacity = '1';
+            this.elements.commandLine.style.display = 'block';
+            this.elements.musicPlayerContainer.classList.add('hidden');
+            this.elements.output.textContent = '';
+            this.elements.input.value = '';
+            this.elements.userInputDisplay.textContent = '';
+        },
+
+        handleInput() {
+            this.elements.userInputDisplay.textContent = this.elements.input.value;
+        },
+
+        handleKeydown(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const command = this.elements.input.value.trim().toLowerCase();
+                this.processCommand(command);
+                this.elements.input.value = '';
+                this.elements.userInputDisplay.textContent = '';
             }
         },
 
-        draw() {
-            this.animationFrameId = requestAnimationFrame(() => this.draw());
-            const ctx = this.ctx;
-            const width = this.canvas.width;
-            const height = this.canvas.height;
-            const time = Date.now() / 1000;
+        processCommand(command) {
+            this.elements.output.textContent = '';
+            if (command === this.secretCommand) {
+                this.elements.output.innerHTML = `&gt; ${command}<br>[SUCCESS] Corporate firewall compromised. Rerouting signal...`;
+                this.elements.corporateLogo.classList.add('shatter-anim');
+                this.elements.corporateBlock.style.opacity = '0';
+                this.elements.commandLine.style.display = 'none';
 
-            ctx.fillStyle = '#1a2a1a';
-            ctx.fillRect(0, 0, width, height);
+                setTimeout(() => {
+                    this.elements.corporateBlock.style.display = 'none';
+                    this.elements.musicPlayerContainer.classList.remove('hidden');
+                }, 500);
 
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-            for (let i = 0; i < height; i += 3) {
-                ctx.fillRect(0, i, width, 1);
+            } else if (command) {
+                this.elements.output.innerHTML = `&gt; ${command}<br>[ERROR] Unknown command or insufficient privileges. Signal jammed.`;
             }
-
-            if (Math.random() > 0.97) {
-                const glitchHeight = Math.random() * 15 + 5;
-                const glitchY = Math.random() * height;
-                ctx.fillStyle = `rgba(${Math.random()*100}, 255, ${Math.random()*100}, 0.1)`;
-                ctx.fillRect(0, glitchY, width, glitchHeight);
-            }
-
-            ctx.fillStyle = '#90ee90';
-            ctx.font = '20px monospace';
-            ctx.textAlign = 'center';
-            ctx.shadowColor = 'lime';
-            ctx.shadowBlur = 10;
-            const text = "SYSTEM ONLINE";
-            const x = width / 2;
-            const y = height / 2 + Math.sin(time * 2) * (height / 10);
-            ctx.fillText(text, x, y);
-            ctx.shadowBlur = 0;
-
-            ctx.font = '14px monospace';
-            const scrollText = "ACCESSING MAINFRAME... SECURE CONNECTION ESTABLISHED... STANDBY...".repeat(3);
-            const scrollX = width - ((time * 60) % (ctx.measureText(scrollText).width + width));
-            ctx.fillText(scrollText, scrollX, height - 20);
         }
     };
     
@@ -251,7 +407,6 @@ window.onload = () => {
         musicAudio.addEventListener('ended', () => Jukebox.playTrack('next'));
         elements.volumeSlider.addEventListener('input', (e) => { musicAudio.volume = e.target.value; });
 
-        // ADDED: Console listeners
         elements.clickableConsole.addEventListener('click', () => {
             sfxClick();
             elements.consoleModal.classList.remove('hidden');
@@ -271,6 +426,12 @@ window.onload = () => {
     }
 
     BootSequence.run();
-    // ADDED: Initialize the console game
-    ConsoleGame.init(elements.consoleGameCanvas);
+    ConsoleGame.init();
 };
+
+      </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
