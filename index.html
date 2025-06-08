@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REDLININ' v2.2.3</title>
+  <title>REDLININ' v2.2.4</title>
   <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -32,10 +32,11 @@
             <img class="hover-car" src="GARAGE 4TH HOVERSHIP.png" alt="Hover Ship 4" data-car-id="3">
         </div>
       </div>
+      <!-- ADDED: Clickable console in the scene -->
+      <img src="LED CONSOLE 1.png" id="clickable-console" alt="Old Console">
     </div>
 
     <div id="ui-layer">
-      <!-- ADDED: Splash screen overlay -->
       <div id="splash-screen-overlay" class="hidden"></div>
       <div id="press-start" class="hidden">[ PRESS START ]</div>
       <img id="moth-ai" src="GARAGE DIGI-MOTH.png" alt="MOTH AI">
@@ -84,7 +85,15 @@
         <div id="hangar-grid"></div>
         <button id="hangar-close-btn">CLOSE</button>
     </div>
+  </div>
 
+  <!-- ADDED: Console modal window -->
+  <div id="console-modal" class="hidden">
+      <div id="console-modal-content">
+          <img src="LED CONSOLE 1.png" id="console-image" alt="Console Display">
+          <canvas id="console-game-canvas"></canvas>
+          <button id="console-close-btn">X</button>
+      </div>
   </div>
 
   <script src="script.js"></script>

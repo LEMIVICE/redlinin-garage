@@ -1,4 +1,4 @@
-console.log('REDLININ Garage v2.2.3 - Full Interactive Build');
+console.log('REDLININ Garage v2.2.4 - Full Interactive Build');
 
 window.onload = () => {
     // --- App State ---
@@ -18,6 +18,11 @@ window.onload = () => {
         volumeSlider: document.getElementById("volume-slider"), trackNameEl: document.getElementById("track-name"), rpmNeedle: document.getElementById("rpm-needle"),
         pressStart: document.getElementById('press-start'),
         splashScreenOverlay: document.getElementById('splash-screen-overlay'),
+        // ADDED: Console elements
+        clickableConsole: document.getElementById('clickable-console'),
+        consoleModal: document.getElementById('console-modal'),
+        consoleGameCanvas: document.getElementById('console-game-canvas'),
+        consoleCloseBtn: document.getElementById('console-close-btn'),
     };
 
     // --- Audio ---
@@ -39,7 +44,7 @@ window.onload = () => {
 
     // --- Modules ---
     const BootSequence = {
-        lines: [ "LEMIVICE BIOS v2.2.3", "...", "Memory Check: OK", "...", "Loading REDLININ' OS...", "..." ],
+        lines: [ "LEMIVICE BIOS v2.2.4", "...", "Memory Check: OK", "...", "Loading REDLININ' OS...", "..." ],
         run() {
             let i = 0;
             const interval = setInterval(() => {
@@ -114,6 +119,71 @@ window.onload = () => {
         react() { clearInterval(this.animationTimer); this.drawFrame(this.ctx1, this.animations.happy, '#00ff00'); setTimeout(() => this.animate(), 1000); }
     };
     
+    // ADDED: Console Game Module
+    const ConsoleGame = {
+        canvas: null,
+        ctx: null,
+        animationFrameId: null,
+
+        init(canvasElement) {
+            this.canvas = canvasElement;
+            this.ctx = this.canvas.getContext('2d');
+            this.canvas.width = 320;
+            this.canvas.height = 200;
+        },
+
+        start() {
+            if (this.animationFrameId) this.stop();
+            this.draw();
+        },
+
+        stop() {
+            if (this.animationFrameId) {
+                cancelAnimationFrame(this.animationFrameId);
+                this.animationFrameId = null;
+            }
+        },
+
+        draw() {
+            this.animationFrameId = requestAnimationFrame(() => this.draw());
+            const ctx = this.ctx;
+            const width = this.canvas.width;
+            const height = this.canvas.height;
+            const time = Date.now() / 1000;
+
+            ctx.fillStyle = '#1a2a1a';
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            for (let i = 0; i < height; i += 3) {
+                ctx.fillRect(0, i, width, 1);
+            }
+
+            if (Math.random() > 0.97) {
+                const glitchHeight = Math.random() * 15 + 5;
+                const glitchY = Math.random() * height;
+                ctx.fillStyle = `rgba(${Math.random()*100}, 255, ${Math.random()*100}, 0.1)`;
+                ctx.fillRect(0, glitchY, width, glitchHeight);
+            }
+
+            ctx.fillStyle = '#90ee90';
+            ctx.font = '20px monospace';
+            ctx.textAlign = 'center';
+            ctx.shadowColor = 'lime';
+            ctx.shadowBlur = 10;
+            const text = "SYSTEM ONLINE";
+            const x = width / 2;
+            const y = height / 2 + Math.sin(time * 2) * (height / 10);
+            ctx.fillText(text, x, y);
+            ctx.shadowBlur = 0;
+
+            ctx.font = '14px monospace';
+            const scrollText = "ACCESSING MAINFRAME... SECURE CONNECTION ESTABLISHED... STANDBY...".repeat(3);
+            const scrollX = width - ((time * 60) % (ctx.measureText(scrollText).width + width));
+            ctx.fillText(scrollText, scrollX, height - 20);
+        }
+    };
+    
     const Jukebox = {
         tracks: [ "track_01.mp3", "track_02.mp3", "track_03.mp3", "track_04.mp3", "track_05.mp3" ], currentTrackIndex: 0,
         setup() {
@@ -180,6 +250,18 @@ window.onload = () => {
         elements.prevBtn.addEventListener('click', (e) => { e.stopPropagation(); sfxClick(); Jukebox.playTrack('prev'); DigitalPet.react(); });
         musicAudio.addEventListener('ended', () => Jukebox.playTrack('next'));
         elements.volumeSlider.addEventListener('input', (e) => { musicAudio.volume = e.target.value; });
+
+        // ADDED: Console listeners
+        elements.clickableConsole.addEventListener('click', () => {
+            sfxClick();
+            elements.consoleModal.classList.remove('hidden');
+            ConsoleGame.start();
+        });
+        elements.consoleCloseBtn.addEventListener('click', () => {
+            sfxClick();
+            elements.consoleModal.classList.add('hidden');
+            ConsoleGame.stop();
+        });
     }
     
     function updateMenuSelection() {
@@ -189,4 +271,6 @@ window.onload = () => {
     }
 
     BootSequence.run();
+    // ADDED: Initialize the console game
+    ConsoleGame.init(elements.consoleGameCanvas);
 };

@@ -30,21 +30,8 @@ body { margin: 0; padding: 0; background-color: #000; font-family: 'Draco', sans
 #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 30; pointer-events: none; }
 #ui-layer > * { pointer-events: auto; }
 
-/* ADDED: Style for the new splash screen overlay */
-#splash-screen-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #000;
-    z-index: 998; /* Just below press-start text (999) */
-    opacity: 1;
-    transition: opacity 0.5s ease-out;
-}
-
+#splash-screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; z-index: 998; opacity: 1; transition: opacity 0.5s ease-out; }
 #press-start { display: block; position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); font-size: 36px; color: cyan; text-shadow: 0 0 10px cyan, 0 0 20px cyan; animation: glow 1.5s ease-in-out infinite alternate; z-index: 999; pointer-events: none; opacity: 1; transition: opacity 0.5s ease-out; }
-
 @keyframes glow { from { opacity: 0.4; } to { opacity: 1; } }
 #moth-ai { position: fixed; width: 90px; z-index: 50; transition: all 12s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none; filter: drop-shadow(0 0 10px cyan); animation: flutter 0.4s ease-in-out infinite alternate; }
 @keyframes flutter { from { transform: translateY(-3px) rotate(-3deg); } to { transform: translateY(3px) rotate(3deg); } }
@@ -80,3 +67,67 @@ body { margin: 0; padding: 0; background-color: #000; font-family: 'Draco', sans
 .hangar-ship-option:hover { border-color: yellow; transform: scale(1.05); }
 .hangar-ship-option img { width: 100%; display: block; }
 #hangar-close-btn { margin-top: 20px; background: none; border: 1px solid red; color: red; padding: 10px 20px; font-size: 1rem; cursor: none; }
+
+/* --- ADDED: Console and Modal Styles --- */
+#clickable-console {
+    position: absolute;
+    bottom: 5%;
+    left: 5%;
+    width: 120px;
+    z-index: 10;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+    filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.5));
+    pointer-events: auto; /* Allow clicks */
+}
+#clickable-console:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 15px rgba(0, 255, 255, 1));
+}
+#console-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+}
+#console-modal-content {
+    position: relative;
+    width: 500px;
+    max-width: 90%;
+}
+#console-image {
+    width: 100%;
+    display: block;
+}
+#console-game-canvas {
+    position: absolute;
+    top: 24.5%;
+    left: 17%;
+    width: 66%;
+    height: 42%;
+    background-color: #111;
+    image-rendering: pixelated;
+}
+#console-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff4444;
+    color: white;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-family: monospace;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1001;
+}
