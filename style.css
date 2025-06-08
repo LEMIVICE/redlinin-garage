@@ -1,154 +1,180 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REDLININ' v2.2.5</title>
-  <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+/* --- Basic Setup --- */
+body { margin: 0; padding: 0; background-color: #000; font-family: 'Draco', sans-serif; overflow: hidden; color: white; cursor: none; }
+#custom-cursor { position: fixed; width: 25px; height: 25px; border: 2px solid cyan; border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: transform 0.1s ease-out, background-color 0.2s ease; box-shadow: 0 0 10px cyan, inset 0 0 10px cyan; opacity: 0; }
+#custom-cursor.visible { opacity: 1; }
+.hidden { display: none !important; }
 
-  <div id="boot-screen">
-    <div id="boot-text"></div>
-  </div>
+/* --- Boot Screen --- */
+#boot-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center; font-family: monospace; }
+#boot-text { font-size: 1.2rem; color: #0f0; text-shadow: 0 0 5px #0f0; white-space: pre; }
 
-  <div id="main-container" class="hidden">
-    <div id="custom-cursor"></div>
+/* --- Scene & Main Container --- */
+#main-container { opacity: 0; transition: opacity 1s ease-in; pointer-events: none; }
+#main-container.visible { opacity: 1; pointer-events: auto; }
+#scene { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+#video-overlay-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; mix-blend-mode: screen; opacity: 0.4; }
+#overlay-video { width: 100%; height: 100%; object-fit: cover; }
+#background-layer { position: absolute; top: -5%; left: -5%; width: 110%; height: 110%; background: url('garage_bg.png') no-repeat center center; background-size: cover; z-index: 1; }
 
-    <div id="scene">
-      <div id="video-overlay-container">
-        <video id="overlay-video" autoplay loop muted playsinline>
-          <source src="dust_overlay_v2.mp4" type="video/mp4" />
-        </video>
-      </div>
-      <div id="background-layer"></div>
-      
-      <div id="hangar-container">
-        <div id="hover-car-bay">
-            <img class="hover-car active" src="hover_ship_cutout.png" alt="Hover Ship 1" data-car-id="0">
-            <img class="hover-car" src="GARAGE 2ND HOVERSHIP.png" alt="Hover Ship 2" data-car-id="1">
-            <img class="hover-car" src="GARAGE 3RD HOVERSHIP.png" alt="Hover Ship 3" data-car-id="2">
-            <img class="hover-car" src="GARAGE 4TH HOVERSHIP.png" alt="Hover Ship 4" data-car-id="3">
-        </div>
-      </div>
-      <!-- UPDATED: Clickable console in the scene -->
-      <img src="LED CONSOLE 1.png" id="clickable-console" alt="Old Console">
-    </div>
+/* Hangar */
+#hangar-container { position: absolute; width: 100%; height: 100%; z-index: 4; }
+#hover-car-bay { position: absolute; width: 45%; top: 50%; left: 50%; z-index: 3; animation: float 4s ease-in-out infinite; }
+.hover-car { width: 100%; position: absolute; top: 0; left: 0; transition: opacity 0.5s ease-in-out; opacity: 0; }
+.hover-car.active { opacity: 1; }
+@keyframes float { 
+    0%, 100% { transform: translate(-50%, -50%); } 
+    50% { transform: translate(-50%, -53%); } 
+}
 
-    <div id="ui-layer">
-      <div id="splash-screen-overlay" class="hidden"></div>
-      <div id="press-start" class="hidden">[ PRESS START ]</div>
-      <img id="moth-ai" src="GARAGE DIGI-MOTH.png" alt="MOTH AI">
+/* --- UI Layer --- */
+#ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 30; pointer-events: none; }
+#ui-layer > * { pointer-events: auto; }
 
-      <div id="digital-pet-zone">
-        <div id="pet-container-1" class="pet-container">
-            <img src="GARAGE DIGITAL PET SKIN.png" class="pet-skin">
-            <canvas id="pet-canvas-1" class="pet-canvas"></canvas>
-        </div>
-        <div id="pet-container-2" class="pet-container hidden">
-            <img src="GARAGE DIGITAL PET SKIN 2.png" class="pet-skin">
-            <canvas id="pet-canvas-2" class="pet-canvas"></canvas>
-        </div>
-      </div>
+#splash-screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; z-index: 998; opacity: 1; transition: opacity 0.5s ease-out; }
+#press-start { display: block; position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); font-size: 36px; color: cyan; text-shadow: 0 0 10px cyan, 0 0 20px cyan; animation: glow 1.5s ease-in-out infinite alternate; z-index: 999; pointer-events: none; opacity: 1; transition: opacity 0.5s ease-out; }
+@keyframes glow { from { opacity: 0.4; } to { opacity: 1; } }
+#moth-ai { position: fixed; width: 90px; z-index: 50; transition: all 12s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none; filter: drop-shadow(0 0 10px cyan); animation: flutter 0.4s ease-in-out infinite alternate; }
+@keyframes flutter { from { transform: translateY(-3px) rotate(-3deg); } to { transform: translateY(3px) rotate(3deg); } }
 
-      <div id="menu-container">
-        <div id="menu">
-            <div id="menu-selector">&gt;</div>
-            <div class="menu-item" data-action="adventure">ADVENTURE</div>
-            <div class="menu-item" data-action="hangar">HANGAR</div>
-            <div class="menu-item" data-action="secrets">SECRETS SHOP</div>
-            <div class="menu-item" data-action="options">DNA CHIP</div>
-            <div class="menu-item" data-action="profile">MEMORY DISC?</div>
-        </div>
-      </div>
-      
-      <div id="jukebox-container">
-        <img src="mp3_player_skin.png" alt="MP3 Player Skin" class="jukebox-bg">
-        <canvas id="visualizer"></canvas>
-        <div id="rpm-meter"><div id="rpm-needle"></div></div>
-        <div id="track-display"><p id="track-name">NO SIGNAL</p></div>
-        <div id="jukebox-controls">
-          <div id="prev-track" class="control-button">«</div>
-          <div id="play-pause" class="control-button" data-state="paused">►</div>
-          <div id="next-track" class="control-button">»</div>
-        </div>
-        <div id="volume-container">
-          <span id="volume-icon">🔊</span>
-          <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.8">
-        </div>
-      </div>
-    </div>
+#digital-pet-zone { position: fixed; bottom: 20px; right: 20px; z-index: 50; display: flex; flex-direction: column; gap: 10px; }
+.pet-container { width: 240px; position: relative; }
+.pet-skin { width: 100%; height: auto; }
+.pet-canvas { position: absolute; top: 23.5%; left: 16.5%; width: 67%; height: 41.5%; image-rendering: pixelated; }
 
-    <div id="hangar-submenu" class="hidden">
-        <h2>SELECT VEHICLE</h2>
-        <div id="hangar-grid"></div>
-        <button id="hangar-close-btn">CLOSE</button>
-    </div>
-  </div>
+#menu-container { position: absolute; top: 15%; right: 0; width: 400px; transform: translateX(100%); transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+#menu-container.visible { transform: translateX(0); }
+#menu { position: relative; text-align: right; padding-right: 50px; }
+.menu-item { font-size: 24px; padding: 8px 0; margin-bottom: 15px; color: cyan; text-shadow: 0 0 8px fuchsia; cursor: none; transition: all 0.2s ease-in-out; opacity: 0.7; }
+.menu-item.selected { color: yellow; transform: translateX(-20px); opacity: 1; text-shadow: 0 0 12px yellow; }
 
-  <!-- UPDATED: Console modal window with terminal game HTML -->
-  <div id="console-modal" class="hidden">
-      <div id="console-modal-content">
-          <img src="LED CONSOLE 1.png" id="console-image" alt="Console Display">
-          <div id="console-screen-content">
-              <!-- CRT overlay and noise for the authentic feel -->
-              <div class="crt-overlay"></div>
-              <div class="noise-bg"></div>
-              
-              <!-- Main Terminal Container -->
-              <div id="terminalContainer" onclick="document.getElementById('terminalInput').focus()">
-                  <!-- Header Section -->
-                  <div class="text-center">
-                      <h1 class="glitch" style="font-family: 'Orbitron', sans-serif;">CONNECTION TERMINATED</h1>
-                      <p class="text-red-500">[REASON: TEMPO LAW VIOLATION]</p>
-                  </div>
-                  
-                  <!-- Corporate Jamming Signal -->
-                  <div id="corporateBlock" class="text-center transition-opacity duration-500">
-                      <p class="text-yellow-400">-- INTRUSIVE SIGNAL DETECTED --</p>
-                      <pre id="corporateLogo" class="text-red-500">
-  ███╗   ███╗ ██████╗ ██████╗  ██████╗ ██████╗ 
-  ████╗ ████║██╔═══██╗██╔══██╗██╔═══██╗██╔══██╗
-  ██╔████╔██║██║   ██║██████╔╝██║   ██║██████╔╝
-  ██║╚██╔╝██║██║   ██║██╔══██╗██║   ██║██╔═══╝ 
-  ██║ ╚═╝ ██║╚██████╔╝██║  ██║╚██████╔╝██║     
-  ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝     
-  <span class="text-yellow-400">Tempo Authority Division</span>
-                      </pre>
-                      <p class="text-yellow-400">-- COMPLIANCE IS MANDATORY --</p>
-                  </div>
-                  
-                  <!-- Command Line Area -->
-                  <div id="commandLine">
-                      <div id="output" class="text-green-400"></div>
-                      <div class="flex items-center">
-                          <span class="text-cyan-400">R.R.D:></span>
-                          <span id="userInputDisplay" class="ml-2 break-all"></span>
-                          <span class="cursor"></span>
-                      </div>
-                      <input type="text" id="terminalInput" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                  </div>
+#jukebox-container { position: absolute; bottom: 40px; left: 20px; z-index: 20; width: 240px; height: 240px; }
+.jukebox-bg { position: absolute; top: 0; left: 0; width: 100%; pointer-events: none; }
+#visualizer { position: absolute; bottom: 84px; left: 24px; width: 192px; height: 40px; }
+#rpm-meter { position: absolute; top: 68px; left: 95px; width: 50px; height: 25px; overflow: hidden; }
+#rpm-needle { width: 100%; height: 200%; background-color: red; border: 1px solid #ffaaaa; transform-origin: 50% 100%; transition: transform 0.1s ease-out; transform: rotate(-45deg); }
+#track-display { position: absolute; top: 44px; left: 24px; width: 192px; height: 20px; line-height: 20px; text-align: center; color: lime; font-family: monospace; font-size: 12px; text-shadow: 0 0 5px lime; overflow: hidden; }
+#track-name { margin: 0; white-space: nowrap; }
+#jukebox-controls { position: absolute; bottom: 44px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 20px; left: 0; }
+.control-button { font-size: 20px; color: cyan; cursor: none; text-shadow: 0 0 8px cyan; transition: all 0.2s; user-select: none; }
+#volume-container { position: absolute; bottom: 18px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 5px; opacity: 0; transition: opacity 0.3s; left: 0; }
+#jukebox-container:hover #volume-container { opacity: 1; }
 
-                  <!-- Hidden Music Player -->
-                  <div id="musicPlayerContainer" class="hidden text-center">
-                      <h2 class="text-cyan-400" style="font-family: 'Orbitron', sans-serif;">BROADCAST HIJACKED</h2>
-                      <div id="musicPlayer">
-                           <p>SECRET SONG UNLOCKED</p>
-                           <p class="text-gray-400">Now Playing: "Asphalt Serenade"</p>
-                           <div class="mt-1 flex items-center justify-center space-x-2">
-                               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M4.018 14.38a2.5 2.5 0 003.216 3.216l9.362-4.681a2.5 2.5 0 000-4.434L7.234 3.799A2.5 2.5 0 004.018 7.015v7.365z"></path></svg>
-                               <div class="w-32 h-1 bg-gray-700 rounded-full"><div class="w-1/3 h-full bg-cyan-400 rounded-full"></div></div>
-                           </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <button id="console-close-btn">X</button>
-      </div>
-  </div>
+/* --- Hangar Sub-Menu --- */
+#hangar-submenu { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; max-width: 900px; background: rgba(10, 20, 30, 0.9); border: 2px solid cyan; box-shadow: 0 0 30px cyan; z-index: 700; padding: 20px; text-align: center; }
+#hangar-submenu h2 { color: yellow; text-shadow: 0 0 10px yellow; margin-top: 0; }
+#hangar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
+.hangar-ship-option { border: 2px solid rgba(0, 255, 255, 0.5); cursor: none; transition: all 0.3s; }
+.hangar-ship-option:hover { border-color: yellow; transform: scale(1.05); }
+.hangar-ship-option img { width: 100%; display: block; }
+#hangar-close-btn { margin-top: 20px; background: none; border: 1px solid red; color: red; padding: 10px 20px; font-size: 1rem; cursor: none; }
 
-  <script src="script.js"></script>
-</body>
-</html>
+/* --- Console and Modal Styles --- */
+#clickable-console {
+    position: absolute;
+    bottom: 25%;
+    left: 8%;
+    width: 90px;
+    z-index: 2; /* Behind the car bay */
+    opacity: 0.6;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s, opacity 0.2s;
+    filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.3)) blur(1px);
+    pointer-events: auto;
+}
+#clickable-console:hover {
+    opacity: 1;
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 15px rgba(0, 255, 255, 1)) blur(0);
+}
+#console-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+}
+#console-modal-content {
+    position: relative;
+    width: 500px;
+    max-width: 90%;
+}
+#console-image {
+    width: 100%;
+    display: block;
+}
+#console-screen-content {
+    position: absolute;
+    top: 24.5%;
+    left: 17%;
+    width: 66%;
+    height: 42%;
+    background-color: #000;
+    font-family: 'VT323', monospace;
+    color: #0dffc3;
+    overflow: hidden;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 12px;
+}
+#console-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff4444;
+    color: white;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-family: monospace;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+/* --- Terminal Game Styles (Scoped to Modal) --- */
+#console-screen-content .crt-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 3px, 5px 100%;
+    pointer-events: none;
+    animation: flicker 0.15s infinite;
+}
+#console-screen-content .noise-bg {
+    position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: transparent url('https://assets.codepen.io/127738/noise.png') repeat 0 0;
+    animation: noise 0.2s infinite;
+    opacity: .05;
+    pointer-events: none;
+}
+@keyframes noise { 0% { transform: translate(0,0); } 10% { transform: translate(-5%,-5%); } 20% { transform: translate(-10%,5%); } 30% { transform: translate(5%,-10%); } 40% { transform: translate(-5%,15%); } 50% { transform: translate(-10%,5%); } 60% { transform: translate(15%,0); } 70% { transform: translate(0,10%); } 80% { transform: translate(-15%,0); } 90% { transform: translate(10%,5%); } 100% { transform: translate(5%,0); } }
+@keyframes flicker { 0% { opacity: 0.2; } 50% { opacity: 0.8; } 100% { opacity: 0.2; } }
+
+#console-screen-content .cursor {
+    display: inline-block; width: 8px; height: 1rem; background-color: #0dffc3;
+    animation: blink 1s step-end infinite; margin-left: 4px;
+}
+@keyframes blink { from, to { background-color: transparent; } 50% { background-color: #0dffc3; } }
+
+#console-screen-content .glitch { animation: glitch-anim 2.5s infinite; }
+@keyframes glitch-anim { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 22% { transform: translate(2px, -2px); } 40% { transform: translate(-1px, -1px); } 42% { transform: translate(1px, 1px); } 60% { transform: translate(-2px, 1px); } 62% { transform: translate(2px, -1px); } 100% { transform: translate(0); } }
+
+#console-screen-content #terminalContainer { width: 100%; height: 100%; position: relative; }
+#console-screen-content h1 { font-size: 1.2rem; }
+#console-screen-content p { font-size: 0.8rem; }
+#console-screen-content #corporateBlock { margin: 5px 0; }
+#console-screen-content #corporateLogo { font-size: 6px; line-height: 1.1; margin: 2px 0; }
+#console-screen-content #commandLine { position: absolute; bottom: 0; left: 0; width: 100%; }
+#console-screen-content #output { font-size: 0.7rem; height: 2rem; }
+#console-screen-content #terminalInput { position: absolute; left: -9999px; opacity: 0; }
+#console-screen-content #musicPlayerContainer { font-size: 0.8rem; }
+#console-screen-content #musicPlayer { background: #000; padding: 5px; border: 1px solid #0dffc3; display: inline-block; }
+@keyframes shatter { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.5) rotate(45deg); opacity: 0; } }
+.shatter-anim { animation: shatter 0.5s forwards ease-in; }

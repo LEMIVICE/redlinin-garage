@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REDLININ' v2.2.5</title>
+  <title>REDLININ' v2.2.6</title>
   <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -33,7 +33,6 @@
             <img class="hover-car" src="GARAGE 4TH HOVERSHIP.png" alt="Hover Ship 4" data-car-id="3">
         </div>
       </div>
-      <!-- UPDATED: Clickable console in the scene -->
       <img src="LED CONSOLE 1.png" id="clickable-console" alt="Old Console">
     </div>
 
@@ -88,24 +87,19 @@
     </div>
   </div>
 
-  <!-- UPDATED: Console modal window with terminal game HTML -->
   <div id="console-modal" class="hidden">
       <div id="console-modal-content">
           <img src="LED CONSOLE 1.png" id="console-image" alt="Console Display">
           <div id="console-screen-content">
-              <!-- CRT overlay and noise for the authentic feel -->
               <div class="crt-overlay"></div>
               <div class="noise-bg"></div>
               
-              <!-- Main Terminal Container -->
               <div id="terminalContainer" onclick="document.getElementById('terminalInput').focus()">
-                  <!-- Header Section -->
                   <div class="text-center">
                       <h1 class="glitch" style="font-family: 'Orbitron', sans-serif;">CONNECTION TERMINATED</h1>
                       <p class="text-red-500">[REASON: TEMPO LAW VIOLATION]</p>
                   </div>
                   
-                  <!-- Corporate Jamming Signal -->
                   <div id="corporateBlock" class="text-center transition-opacity duration-500">
                       <p class="text-yellow-400">-- INTRUSIVE SIGNAL DETECTED --</p>
                       <pre id="corporateLogo" class="text-red-500">
@@ -120,7 +114,6 @@
                       <p class="text-yellow-400">-- COMPLIANCE IS MANDATORY --</p>
                   </div>
                   
-                  <!-- Command Line Area -->
                   <div id="commandLine">
                       <div id="output" class="text-green-400"></div>
                       <div class="flex items-center">
@@ -131,7 +124,6 @@
                       <input type="text" id="terminalInput" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                   </div>
 
-                  <!-- Hidden Music Player -->
                   <div id="musicPlayerContainer" class="hidden text-center">
                       <h2 class="text-cyan-400" style="font-family: 'Orbitron', sans-serif;">BROADCAST HIJACKED</h2>
                       <div id="musicPlayer">
