@@ -21,15 +21,20 @@ body { margin: 0; padding: 0; background-color: #000; font-family: 'Draco', sans
 #hover-car-bay { position: absolute; width: 45%; top: 50%; left: 50%; z-index: 3; animation: float 4s ease-in-out infinite; }
 .hover-car { width: 100%; position: absolute; top: 0; left: 0; transition: opacity 0.5s ease-in-out; opacity: 0; }
 .hover-car.active { opacity: 1; }
+
+/* UPDATED: Made the hover effect slightly more pronounced */
 @keyframes float { 
     0%, 100% { transform: translate(-50%, -50%); } 
-    50% { transform: translate(-50%, -52%); } 
+    50% { transform: translate(-50%, -53%); } 
 }
 
 /* --- UI Layer --- */
 #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 30; pointer-events: none; }
 #ui-layer > * { pointer-events: auto; }
-#press-start { display: block !important; position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); font-size: 36px; color: cyan; text-shadow: 0 0 10px cyan, 0 0 20px cyan; animation: glow 1.5s ease-in-out infinite alternate; z-index: 999; pointer-events: none; opacity: 1; transition: opacity 0.5s ease-out; }
+
+/* UPDATED: Removed !important to allow the element to be hidden correctly */
+#press-start { display: block; position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); font-size: 36px; color: cyan; text-shadow: 0 0 10px cyan, 0 0 20px cyan; animation: glow 1.5s ease-in-out infinite alternate; z-index: 999; pointer-events: none; opacity: 1; transition: opacity 0.5s ease-out; }
+
 @keyframes glow { from { opacity: 0.4; } to { opacity: 1; } }
 #moth-ai { position: fixed; width: 90px; z-index: 50; transition: all 12s cubic-bezier(0.45, 0, 0.55, 1); pointer-events: none; filter: drop-shadow(0 0 10px cyan); animation: flutter 0.4s ease-in-out infinite alternate; }
 @keyframes flutter { from { transform: translateY(-3px) rotate(-3deg); } to { transform: translateY(3px) rotate(3deg); } }
