@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REDLININ' v2.2.6</title>
+  <title>REDLININ' v2.2.7</title>
   <link href="https://fonts.cdnfonts.com/css/draco" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -58,6 +58,7 @@
             <div class="menu-item" data-action="adventure">ADVENTURE</div>
             <div class="menu-item" data-action="hangar">HANGAR</div>
             <div class="menu-item" data-action="secrets">SECRETS SHOP</div>
+            <div class="menu-item" data-action="datalab">DATALAB</div>
             <div class="menu-item" data-action="options">DNA CHIP</div>
             <div class="menu-item" data-action="profile">MEMORY DISC?</div>
         </div>
@@ -85,6 +86,16 @@
         <div id="hangar-grid"></div>
         <button id="hangar-close-btn">CLOSE</button>
     </div>
+  </div>
+
+  <!-- ADDED: Datalab Section -->
+  <div id="datalab-container" class="hidden">
+      <div id="datalab-bg-1" class="datalab-bg active"></div>
+      <div id="datalab-bg-2" class="datalab-bg"></div>
+      <div id="datalab-bg-3" class="datalab-bg"></div>
+      <div id="datalab-nav-left" class="datalab-nav">&lt;</div>
+      <div id="datalab-nav-right" class="datalab-nav">&gt;</div>
+      <button id="datalab-close-btn">RETURN TO GARAGE</button>
   </div>
 
   <div id="console-modal" class="hidden">

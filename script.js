@@ -1,8 +1,14 @@
-console.log('REDLININ Garage v2.2.6 - Full Interactive Build');
+console.log('REDLININ Garage v2.2.7 - Full Interactive Build');
 
 window.onload = () => {
     // --- App State ---
-    const AppState = { menuActive: false, currentCarIndex: 0, selectedIndex: 0 };
+    const AppState = {
+        menuActive: false,
+        currentCarIndex: 0,
+        selectedIndex: 0,
+        currentView: 'garage', // 'garage' or 'datalab'
+        currentDatalabBg: 0,
+    };
 
     // --- DOM Element Cache ---
     const elements = {
@@ -21,6 +27,12 @@ window.onload = () => {
         clickableConsole: document.getElementById('clickable-console'),
         consoleModal: document.getElementById('console-modal'),
         consoleCloseBtn: document.getElementById('console-close-btn'),
+        // ADDED: Datalab elements
+        datalabContainer: document.getElementById('datalab-container'),
+        datalabBgs: document.querySelectorAll('.datalab-bg'),
+        datalabNavLeft: document.getElementById('datalab-nav-left'),
+        datalabNavRight: document.getElementById('datalab-nav-right'),
+        datalabCloseBtn: document.getElementById('datalab-close-btn'),
     };
 
     // --- Audio ---
@@ -42,7 +54,7 @@ window.onload = () => {
 
     // --- Modules ---
     const BootSequence = {
-        lines: [ "LEMIVICE BIOS v2.2.6", "...", "Memory Check: OK", "...", "Loading REDLININ' OS...", "..." ],
+        lines: [ "LEMIVICE BIOS v2.2.7", "...", "Memory Check: OK", "...", "Loading REDLININ' OS...", "..." ],
         run() {
             let i = 0;
             const interval = setInterval(() => {
@@ -242,13 +254,45 @@ window.onload = () => {
         setInterval(MothAI.move, 8000); MothAI.move();
     }
 
+    function switchView(view) {
+        if (view === 'datalab') {
+            AppState.currentView = 'datalab';
+            elements.mainContainer.classList.remove('visible');
+            elements.datalabContainer.classList.remove('hidden');
+            setTimeout(() => elements.datalabContainer.classList.add('visible'), 50);
+        } else { // 'garage'
+            AppState.currentView = 'garage';
+            elements.datalabContainer.classList.remove('visible');
+            elements.mainContainer.classList.add('visible');
+            setTimeout(() => elements.datalabContainer.classList.add('hidden'), 1000);
+        }
+    }
+
+    function updateDatalabView(direction) {
+        sfxClick();
+        const current = AppState.currentDatalabBg;
+        elements.datalabBgs[current].classList.remove('active');
+        
+        let next = current;
+        if (direction === 'next') {
+            next = (current + 1) % elements.datalabBgs.length;
+        } else if (direction === 'prev') {
+            next = (current - 1 + elements.datalabBgs.length) % elements.datalabBgs.length;
+        }
+        
+        elements.datalabBgs[next].classList.add('active');
+        AppState.currentDatalabBg = next;
+    }
+
     function addInteractiveListeners() {
         elements.menuItems.forEach((item, index) => {
              item.addEventListener('mouseenter', () => { AppState.selectedIndex = index; updateMenuSelection(); sfxHover(); });
              item.addEventListener('click', () => {
                  sfxSelect();
-                 if (item.dataset.action === 'hangar') { Hangar.openSubmenu(); } 
-                 else { alert('Clicked: ' + item.dataset.action); }
+                 const action = item.dataset.action;
+                 if (action === 'hangar') { Hangar.openSubmenu(); }
+                 else if (action === 'datalab') { switchView('datalab'); }
+                 else { alert('Clicked: ' + action); }
              });
         });
         elements.hangarCloseBtn.addEventListener('click', () => { sfxClick(); Hangar.closeSubmenu(); });
@@ -269,6 +313,11 @@ window.onload = () => {
             elements.consoleModal.classList.add('hidden');
             ConsoleGame.stop();
         });
+
+        // ADDED: Datalab navigation listeners
+        elements.datalabNavLeft.addEventListener('click', () => updateDatalabView('prev'));
+        elements.datalabNavRight.addEventListener('click', () => updateDatalabView('next'));
+        elements.datalabCloseBtn.addEventListener('click', () => switchView('garage'));
     }
     
     function updateMenuSelection() {

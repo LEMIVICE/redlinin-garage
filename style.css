@@ -68,98 +68,43 @@ body { margin: 0; padding: 0; background-color: #000; font-family: 'Draco', sans
 .hangar-ship-option img { width: 100%; display: block; }
 #hangar-close-btn { margin-top: 20px; background: none; border: 1px solid red; color: red; padding: 10px 20px; font-size: 1rem; cursor: none; }
 
-/* --- UPDATED: Console and Modal Styles --- */
+/* --- Console and Modal Styles --- */
 @keyframes console-glitch-hint {
-    0%, 95% {
-        filter: blur(1.5px);
-        opacity: 0.9;
-    }
-    96% {
-        filter: drop-shadow(0 0 8px cyan) brightness(1.5) blur(0);
-        opacity: 1;
-    }
-    97% {
-        filter: blur(1.5px);
-        opacity: 0.9;
-    }
-    98% {
-        filter: drop-shadow(0 0 5px cyan) brightness(1.2) contrast(2) blur(0);
-        transform: skewX(-3deg);
-        opacity: 1;
-    }
-    100% {
-        filter: blur(1.5px);
-        transform: skewX(0deg);
-        opacity: 0.9;
-    }
+    0%, 95% { filter: blur(1.5px); opacity: 0.9; }
+    96% { filter: drop-shadow(0 0 8px cyan) brightness(1.5) blur(0); opacity: 1; }
+    97% { filter: blur(1.5px); opacity: 0.9; }
+    98% { filter: drop-shadow(0 0 5px cyan) brightness(1.2) contrast(2) blur(0); transform: skewX(-3deg); opacity: 1; }
+    100% { filter: blur(1.5px); transform: skewX(0deg); opacity: 0.9; }
 }
-
 #clickable-console {
     position: absolute;
-    bottom: 42%;
-    left: calc(8% + 30px); /* Moved 30px to the right */
+    bottom: 42%; left: calc(8% + 30px);
     width: 90px;
     z-index: 10;
     cursor: pointer;
     pointer-events: auto;
-    animation: console-glitch-hint 7s infinite; /* Apply the subtle glitch animation */
+    animation: console-glitch-hint 7s infinite;
 }
-
-#clickable-console:hover {
-    /* No hover effect to keep it a secret */
-}
-
 #console-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
     z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: flex; justify-content: center; align-items: center;
     pointer-events: auto;
 }
-#console-modal-content {
-    position: relative;
-    width: 500px;
-    max-width: 90%;
-}
-#console-image {
-    width: 100%;
-    display: block;
-}
+#console-modal-content { position: relative; width: 500px; max-width: 90%; }
+#console-image { width: 100%; display: block; }
 #console-screen-content {
-    position: absolute;
-    top: 24.5%;
-    left: 17%;
-    width: 66%;
-    height: 42%;
+    position: absolute; top: 24.5%; left: 17%; width: 66%; height: 42%;
     background-color: #000;
-    font-family: 'VT323', monospace;
-    color: #0dffc3;
-    overflow: hidden;
-    padding: 10px;
-    box-sizing: border-box;
-    font-size: 12px;
+    font-family: 'VT323', monospace; color: #0dffc3;
+    overflow: hidden; padding: 10px; box-sizing: border-box; font-size: 12px;
 }
 #console-close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #ff4444;
-    color: white;
-    border: 2px solid #fff;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-family: monospace;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 1001;
+    position: absolute; top: 10px; right: 10px;
+    background: #ff4444; color: white; border: 2px solid #fff; border-radius: 50%;
+    width: 30px; height: 30px;
+    font-family: monospace; font-size: 16px; font-weight: bold; cursor: pointer; z-index: 1001;
 }
 
 /* --- Terminal Game Styles (Scoped to Modal) --- */
@@ -167,28 +112,19 @@ body { margin: 0; padding: 0; background-color: #000; font-family: 'Draco', sans
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
     background-size: 100% 3px, 5px 100%;
-    pointer-events: none;
-    animation: flicker 0.15s infinite;
+    pointer-events: none; animation: flicker 0.15s infinite;
 }
 #console-screen-content .noise-bg {
     position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
     background: transparent url('https://assets.codepen.io/127738/noise.png') repeat 0 0;
-    animation: noise 0.2s infinite;
-    opacity: .05;
-    pointer-events: none;
+    animation: noise 0.2s infinite; opacity: .05; pointer-events: none;
 }
 @keyframes noise { 0% { transform: translate(0,0); } 10% { transform: translate(-5%,-5%); } 20% { transform: translate(-10%,5%); } 30% { transform: translate(5%,-10%); } 40% { transform: translate(-5%,15%); } 50% { transform: translate(-10%,5%); } 60% { transform: translate(15%,0); } 70% { transform: translate(0,10%); } 80% { transform: translate(-15%,0); } 90% { transform: translate(10%,5%); } 100% { transform: translate(5%,0); } }
 @keyframes flicker { 0% { opacity: 0.2; } 50% { opacity: 0.8; } 100% { opacity: 0.2; } }
-
-#console-screen-content .cursor {
-    display: inline-block; width: 8px; height: 1rem; background-color: #0dffc3;
-    animation: blink 1s step-end infinite; margin-left: 4px;
-}
+#console-screen-content .cursor { display: inline-block; width: 8px; height: 1rem; background-color: #0dffc3; animation: blink 1s step-end infinite; margin-left: 4px; }
 @keyframes blink { from, to { background-color: transparent; } 50% { background-color: #0dffc3; } }
-
 #console-screen-content .glitch { animation: glitch-anim 2.5s infinite; }
 @keyframes glitch-anim { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 22% { transform: translate(2px, -2px); } 40% { transform: translate(-1px, -1px); } 42% { transform: translate(1px, 1px); } 60% { transform: translate(-2px, 1px); } 62% { transform: translate(2px, -1px); } 100% { transform: translate(0); } }
-
 #console-screen-content #terminalContainer { width: 100%; height: 100%; position: relative; }
 #console-screen-content h1 { font-size: 1.2rem; }
 #console-screen-content p { font-size: 0.8rem; }
@@ -201,3 +137,74 @@ body { margin: 0; padding: 0; background-color: #000; font-family: 'Draco', sans
 #console-screen-content #musicPlayer { background: #000; padding: 5px; border: 1px solid #0dffc3; display: inline-block; }
 @keyframes shatter { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.5) rotate(45deg); opacity: 0; } }
 .shatter-anim { animation: shatter 0.5s forwards ease-in; }
+
+/* --- ADDED: Datalab Styles --- */
+#datalab-container {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 25;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    pointer-events: none;
+}
+#datalab-container.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+.datalab-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 1s ease-in-out;
+    opacity: 0;
+}
+.datalab-bg.active {
+    opacity: 1;
+}
+#datalab-bg-1 { background-image: url('DATALAB1.png'); }
+#datalab-bg-2 { background-image: url('DATALAB2.png'); }
+#datalab-bg-3 { background-image: url('DATALAB3.png'); }
+
+.datalab-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 60px;
+    color: cyan;
+    text-shadow: 0 0 15px cyan;
+    cursor: pointer;
+    z-index: 26;
+    padding: 0 20px;
+    user-select: none;
+    transition: all 0.2s;
+}
+.datalab-nav:hover {
+    color: yellow;
+    text-shadow: 0 0 20px yellow;
+}
+#datalab-nav-left { left: 10px; }
+#datalab-nav-right { right: 10px; }
+
+#datalab-close-btn {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: none;
+    border: 1px solid red;
+    color: red;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: none;
+    z-index: 26;
+    transition: all 0.2s;
+}
+#datalab-close-btn:hover {
+    background: red;
+    color: white;
+}
